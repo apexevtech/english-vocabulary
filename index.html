@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>我的单词记忆</title>
+  <style>
+    :root { --ink:#18201d; --muted:#68716d; --line:#d9dfdb; --paper:#f7f8f5; --panel:#fff; --green:#176b52; --green2:#e6f2ed; --amber:#c57926; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif; letter-spacing:0; }
+    button,input { font:inherit; }
+    button { cursor:pointer; }
+    .app { min-height:100vh; display:grid; grid-template-columns:280px 1fr; }
+    aside { position:sticky; top:0; height:100vh; overflow:auto; border-right:1px solid var(--line); background:#eef1ed; padding:24px 18px; }
+    .brand { font-size:20px; font-weight:750; margin:0 0 4px; }
+    .sub { color:var(--muted); font-size:13px; margin-bottom:20px; }
+    .search { width:100%; height:40px; border:1px solid var(--line); border-radius:6px; padding:0 12px; background:white; outline:none; }
+    .search:focus { border-color:var(--green); }
+    .status-filter { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:10px; padding:3px; border:1px solid var(--line); border-radius:6px; background:#e3e8e4; }
+    .status-filter button { height:34px; border:0; border-radius:4px; background:transparent; color:var(--muted); font-size:13px; font-weight:700; }
+    .status-filter button.active { background:white; color:var(--green); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+    .count { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; margin:16px 4px 8px; }
+    .word-list { display:grid; gap:6px; }
+    .word-group { border-top:1px solid #d6ddd8; }
+    .word-group summary { list-style:none; display:flex; justify-content:space-between; align-items:center; padding:11px 4px 7px; color:#4f5b56; font-size:12px; font-weight:800; cursor:pointer; }
+    .word-group summary::-webkit-details-marker { display:none; }
+    .word-group summary::before { content:'▸'; margin-right:7px; color:var(--green); }
+    .word-group[open] summary::before { content:'▾'; }
+    .group-title { flex:1; }
+    .group-count { color:var(--muted); font-weight:600; }
+    .group-items { display:grid; gap:5px; padding-bottom:7px; }
+    .empty-list { color:var(--muted); font-size:13px; padding:24px 8px; text-align:center; }
+    .word-item { width:100%; border:1px solid transparent; border-radius:6px; padding:11px 12px; background:transparent; text-align:left; display:flex; justify-content:space-between; align-items:center; }
+    .word-item:hover { background:white; }
+    .word-item.active { background:white; border-color:#cbd8d1; color:var(--green); font-weight:700; }
+    .dot { width:8px; height:8px; border:1px solid #82908a; border-radius:50%; flex:none; }
+    .learned .dot { background:var(--green); border-color:var(--green); }
+    main { padding:34px clamp(22px,5vw,70px); }
+    .topbar { max-width:920px; margin:auto; display:flex; justify-content:space-between; align-items:center; gap:16px; }
+    .eyebrow { color:var(--green); font-size:12px; font-weight:750; text-transform:uppercase; }
+    .actions { display:flex; gap:8px; }
+    .icon-btn,.action-btn { min-height:40px; border:1px solid var(--line); border-radius:6px; background:white; color:var(--ink); padding:8px 12px; }
+    .icon-btn { width:42px; padding:0; font-size:20px; }
+    .action-btn.primary { background:var(--green); border-color:var(--green); color:white; }
+    article { max-width:920px; margin:22px auto 0; }
+    h1 { font-family:Georgia,serif; font-size:clamp(42px,7vw,76px); line-height:1; margin:0; letter-spacing:0; cursor:pointer; width:max-content; max-width:100%; }
+    h1:hover { color:var(--green); }
+    h1:focus-visible { outline:2px solid var(--green); outline-offset:5px; border-radius:3px; }
+    .phonetic { color:var(--muted); font-size:19px; margin:12px 0 28px; }
+    .pos { display:inline-block; margin-top:-18px; margin-bottom:22px; padding:5px 9px; border:1px solid #cbd8d1; border-radius:4px; color:var(--green); background:var(--green2); font-size:13px; font-weight:750; }
+    .meaning { font-size:25px; line-height:1.5; font-weight:650; padding:20px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:28px 42px; margin-top:30px; }
+    section { min-width:0; }
+    h2 { font-size:14px; margin:0 0 10px; color:var(--green); }
+    p { line-height:1.75; margin:0; }
+    .formula { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:8px 0 12px; }
+    .part { background:var(--green2); color:#125742; border-radius:5px; padding:8px 10px; font-weight:750; }
+    .plus { color:var(--muted); }
+    .collocations { display:grid; gap:8px; }
+    .pair { display:flex; justify-content:space-between; gap:16px; padding-bottom:7px; border-bottom:1px dotted var(--line); }
+    .example,.story { grid-column:1/-1; padding:18px 20px; border-left:4px solid var(--amber); background:white; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .section-head h2 { margin:0; }
+    .listen-btn { display:none; }
+    .en { font-family:Georgia,serif; font-size:20px; line-height:1.55; }
+    .zh { color:var(--muted); margin-top:8px; }
+    .hidden-cn .cn { filter:blur(7px); user-select:none; }
+    .footer-nav { max-width:920px; margin:28px auto 0; display:flex; justify-content:space-between; border-top:1px solid var(--line); padding-top:18px; }
+    .notice { color:var(--muted); font-size:12px; align-self:center; }
+    @media (max-width:720px) {
+      .app { display:block; }
+      aside { position:relative; top:auto; height:auto; overflow:visible; border-right:0; border-bottom:1px solid var(--line); padding:16px; }
+      .brand,.sub,.count { display:none; }
+      .word-list { display:flex; overflow:auto; margin-top:10px; }
+      .word-item { min-width:120px; background:white; }
+      main { padding:22px 18px; }
+      .topbar { align-items:flex-start; }
+      .actions { flex-wrap:wrap; justify-content:flex-end; }
+      .grid { grid-template-columns:1fr; gap:24px; }
+      .example,.story { grid-column:1; }
+      .meaning { font-size:21px; }
+      .notice { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">我的单词记忆</div>
+      <div class="sub">理解构词 · 串联场景 · 反复朗读</div>
+      <input id="search" class="search" type="search" placeholder="搜索单词或中文" aria-label="搜索单词">
+      <div class="status-filter" aria-label="掌握状态筛选">
+        <button id="showUnlearned" class="active">未掌握</button>
+        <button id="showLearned">已掌握</button>
+      </div>
+      <div class="count"><span id="total">1 个单词</span><span id="progress">已掌握 0</span></div>
+      <div id="wordList" class="word-list"></div>
+    </aside>
+    <main>
+      <div class="topbar">
+        <div class="eyebrow" id="index">Word 001</div>
+        <div class="actions">
+          <button class="action-btn" id="prev">← 上一个</button>
+          <button class="action-btn" id="next">下一个 →</button>
+          <button class="action-btn" id="recordingGb">英式发音</button>
+          <button class="action-btn" id="recordingUs">美式发音</button>
+          <button class="action-btn" id="toggleCn">隐藏中文</button>
+          <button class="action-btn primary" id="mastered">标记掌握</button>
+        </div>
+      </div>
+      <article id="card">
+        <h1 id="word" role="button" tabindex="0" title="点击播放发音" aria-label="播放当前单词发音"></h1>
+        <div class="phonetic" id="phonetic"></div>
+        <div class="pos" id="pos"></div>
+        <div class="meaning cn" id="meaning"></div>
+        <div class="grid">
+          <section>
+            <h2>构词拆解</h2>
+            <div class="formula" id="formula"></div>
+            <p id="origin"></p>
+          </section>
+          <section>
+            <h2>画面联想</h2>
+            <p class="cn" id="mnemonic"></p>
+          </section>
+          <section>
+            <h2>常用搭配</h2>
+            <div class="collocations" id="collocations"></div>
+          </section>
+          <section>
+            <h2>词义提示</h2>
+            <p class="cn" id="note"></p>
+          </section>
+          <section class="example">
+            <div class="section-head"><h2>例句</h2><button class="listen-btn" id="listenExample">朗读例句</button></div>
+            <p class="en" id="exampleEn"></p>
+            <p class="zh cn" id="exampleZh"></p>
+          </section>
+          <section class="story">
+            <div class="section-head"><h2>串联记忆</h2><button class="listen-btn" id="listenStory">朗读串联记忆</button></div>
+            <p class="en" id="storyEn"></p>
+            <p class="zh cn" id="storyZh"></p>
+          </section>
+        </div>
+      </article>
+      <div class="footer-nav">
+        <span class="notice">学习状态会保存在这个浏览器中</span>
+      </div>
+    </main>
+  </div>
+  <audio id="audio"></audio>
+  <script>
+    const words = [{
+      id:1, word:'abject', phonetic:'英 /ˈæbdʒekt/  ·  美 /ˈæbdʒekt/  ·  重音在第一音节', meaning:'极其悲惨的；卑躬屈膝的；卑劣的',
+      parts:[['ab-','离开、向下'],['-ject','投、扔']],
+      origin:'源自拉丁语 ab- + jacere，原意是“被扔下去的”。这是词源联想，不是可以自由拆装的现代构词规则。',
+      mnemonic:'想象一个人被生活“扔到最下面”，处于极其悲惨、卑微的境地。',
+      collocations:[['abject poverty','赤贫'],['abject failure','惨败'],['abject misery','极度悲惨'],['an abject apology','卑躬屈膝的道歉']],
+      note:'常用于加强负面含义。形容 poverty、failure、misery 时表示程度极端；形容 apology 时强调过分卑微。',
+      exampleEn:'The family lived in abject poverty, but they never lost hope.', exampleZh:'这家人生活在赤贫之中，但他们从未失去希望。',
+      storyEn:'In abject poverty, the family still held on to hope.', storyZh:'身处赤贫之中，这家人依然心怀希望。',
+      audioGb:'audio/001-abject-oxford-gb-v2.mp3', audioUs:'audio/001-abject-oxford-us-v2.mp3',
+      audioExample:'audio/001-abject-example-v2.mp3', audioStory:'audio/001-abject-story-v2.mp3'
+    },{
+      id:2, word:'domain', phonetic:'英 /dəˈmeɪn/  ·  美 /dəˈmeɪn/  ·  重音在第二音节', meaning:'领域；范围；领地；域名',
+      parts:[['domin-','主人、支配、统治']],
+      origin:'来自拉丁语 dominus（主人），经法语 domaine 进入英语。可联想到 dominate（支配）和 dominion（领地）。domain 是整体借入词，-ain 不是这里可自由使用的英语后缀。',
+      mnemonic:'主人能够管理和支配的一片范围，就是他的“领域”；在互联网中，由名称管理的网站范围就是“域名”。',
+      collocations:[['domain name','域名'],['public domain','公有领域'],['domain expertise','领域专长'],['within the domain of','在……领域内']],
+      note:'谈知识或活动时表示“领域”；谈互联网地址时表示“域名”；正式语境中还可以表示某人控制的范围或领地。',
+      exampleEn:'Cybersecurity is a rapidly changing domain.', exampleZh:'网络安全是一个快速变化的领域。',
+      storyEn:'In the domain of public policy, researchers study how to reduce abject poverty.', storyZh:'在公共政策领域，研究人员探讨如何减少赤贫。',
+      audioGb:'audio/002-domain-oxford-gb.mp3', audioUs:'audio/002-domain-oxford-us.mp3',
+      audioExample:'audio/002-domain-example.mp3', audioStory:'audio/002-domain-story.mp3'
+    },{
+      id:3, word:'amoral', phonetic:'英 /ˌeɪˈmɒrəl/  ·  美 /ˌeɪˈmɔːrəl/  ·  主重音在 mor', meaning:'非道德性的；无道德观念的；不考虑道德的',
+      parts:[['a-','无、不'],['moral','道德的']],
+      origin:'否定前缀 a-（无、不）+ moral（道德的），表示处于道德判断之外，或根本不考虑道德。',
+      mnemonic:'amoral 是“没有把道德放进判断中”，immoral 则是“明知标准却违反道德”。',
+      collocations:[['amoral behavior','不考虑道德的行为'],['an amoral attitude','无道德观念的态度'],['amoral decision-making','不涉及道德判断的决策'],['an amoral system','不考虑道德的体系']],
+      note:'不要与 immoral 混淆：amoral 强调缺少道德意识或与道德无关；immoral 明确表示不道德、违反道德。',
+      exampleEn:'The algorithm is amoral; its impact depends on how people use it.', exampleZh:'算法本身不涉及道德；它的影响取决于人们如何使用它。',
+      storyEn:'In the domain of business, an amoral pursuit of profit can leave workers in abject poverty.', storyZh:'在商业领域，不顾道德地追逐利润可能使工人陷入赤贫。',
+      audioGb:'audio/003-amoral-oxford-gb.mp3', audioUs:'audio/003-amoral-oxford-us.mp3',
+      audioExample:'audio/003-amoral-example.mp3', audioStory:'audio/003-amoral-story.mp3'
+    },{
+      id:4, word:'asocial', phonetic:'英 /eɪˈsəʊʃəl/  ·  美 /eɪˈsoʊʃəl/  ·  主重音在 so', meaning:'不爱社交的；回避社交的；非社会性的',
+      parts:[['a-','无、不'],['social','社交的、社会的']],
+      origin:'否定前缀 a-（无、不）+ social（社交的、社会的），核心意思是缺少社交倾向或回避社交。',
+      mnemonic:'asocial 是“没有社交倾向”，像主动离开聚会；antisocial 则可能是反社会或损害他人。',
+      collocations:[['asocial behavior','回避社交的行为'],['an asocial person','不爱社交的人'],['increasingly asocial','越来越不合群'],['an asocial lifestyle','离群的生活方式']],
+      note:'asocial 通常表示不想参与社交；antisocial 在正式语境中表示反社会、损害社会，日常口语有时也被误用为“不合群”。',
+      exampleEn:'He became increasingly asocial and preferred to work alone.', exampleZh:'他变得越来越不爱社交，更喜欢独自工作。',
+      storyEn:'An asocial programmer entered the domain of finance and built an amoral system that ignored people in abject poverty.', storyZh:'一名不爱社交的程序员进入金融领域，建立了一个无视赤贫人群、缺乏道德考量的系统。',
+      audioGb:'audio/004-asocial-word.mp3', audioUs:'', audioLabelGb:'合成朗读',
+      audioExample:'audio/004-asocial-example.mp3', audioStory:'audio/004-asocial-story.mp3'
+    },{
+      id:5, word:'atypical', phonetic:'英 /ˌeɪˈtɪpɪkl/  ·  美 /ˌeɪˈtɪpɪkl/  ·  主重音在 typ', meaning:'非典型的；反常的',
+      parts:[['a-','非、不'],['typical','典型的']], origin:'否定前缀 a- + typical，直观表示“不典型”。',
+      mnemonic:'把 typical 前面加 a-，典型特征被否定，就成了“非典型的”。', collocations:[['atypical behavior','反常行为'],['atypical symptoms','非典型症状'],['atypical of somebody','不像某人的一贯作风'],['an atypical case','非典型案例']],
+      note:'常用于医学症状、行为和案例；比 unusual 更强调“不符合某一典型模式”。', exampleEn:'Her response was atypical for someone in her position.', exampleZh:'对处在她这个职位的人来说，她的反应并不典型。',
+      storyEn:'An atypical, asocial researcher entered a new scientific domain.', storyZh:'一位行事反常且不爱社交的研究者进入了一个新的科学领域。', audioGb:'audio/atypical-oxford-us-real.mp3', audioUs:'audio/atypical-oxford-us-real.mp3', audioExample:'audio/005-atypical-example.mp3', audioStory:'audio/005-atypical-story.mp3'
+    },{
+      id:6, word:'acentric', phonetic:'英 /eɪˈsentrɪk/  ·  美 /eɪˈsentrɪk/  ·  主重音在 cen', meaning:'无中心的；无着丝粒的',
+      parts:[['a-','无、不'],['centr-','中心'],['-ic','形容词后缀']], origin:'a- + centr- + -ic，字面意思是“没有中心的”；遗传学中特指没有着丝粒的。',
+      mnemonic:'center 的中心消失了，就变成 acentric：无中心、无着丝粒。', collocations:[['acentric chromosome','无着丝粒染色体'],['acentric fragment','无着丝粒片段'],['acentric structure','无中心结构']],
+      note:'这是较专业的生物学或几何学词汇，最常见于 chromosome 和 fragment。', exampleEn:'An acentric chromosome lacks a centromere.', exampleZh:'无着丝粒染色体缺少着丝粒。',
+      storyEn:'The scientist found an acentric fragment with an atypical shape.', storyZh:'科学家发现了一个形状异常的无着丝粒片段。', audioGb:'audio/acentric-word.mp3', audioUs:'', audioLabelGb:'合成朗读', audioExample:'audio/006-acentric-example.mp3', audioStory:'audio/006-acentric-story.mp3'
+    },{
+      id:7, word:'apathy', phonetic:'英 /ˈæpəθi/  ·  美 /ˈæpəθi/  ·  重音在第一音节', meaning:'冷漠；漠不关心；缺乏兴趣',
+      parts:[['a-','无、不'],['path-','感情、感受'],['-y','状态']], origin:'源自希腊语 apatheia：a-（无）+ pathos（感情、感受），表示“没有感受的状态”。',
+      mnemonic:'没有 pathos（感情），对事情提不起兴趣，就是 apathy。', collocations:[['public apathy','公众冷漠'],['voter apathy','选民冷漠'],['apathy toward something','对某事漠不关心'],['a sense of apathy','冷漠感']],
+      note:'强调缺乏兴趣、热情或关心；形容词是 apathetic。', exampleEn:'Public apathy can prevent meaningful reform.', exampleZh:'公众的冷漠可能阻碍有意义的改革。',
+      storyEn:'Apathy toward abject poverty is an amoral response.', storyZh:'对赤贫漠不关心，是一种缺乏道德考量的反应。', audioGb:'audio/apathy-oxford-us-real.mp3', audioUs:'audio/apathy-oxford-us-real.mp3', audioExample:'audio/007-apathy-example.mp3', audioStory:'audio/007-apathy-story.mp3'
+    },{
+      id:8, word:'aperiodic', phonetic:'英 /ˌeɪpɪəriˈɒdɪk/  ·  美 /ˌeɪpɪriˈɑːdɪk/  ·  主重音在 od', meaning:'非周期的；不定期的',
+      parts:[['a-','无、不'],['periodic','周期性的']], origin:'否定前缀 a- + periodic，表示“不按固定周期重复”。',
+      mnemonic:'periodic 是周期出现；加 a- 取消周期，就成为 aperiodic。', collocations:[['aperiodic signal','非周期信号'],['aperiodic pattern','非周期模式'],['aperiodic process','非周期过程']],
+      note:'多用于数学、物理和信号领域，与 periodic（周期性的）相对。', exampleEn:'The signal is aperiodic and does not repeat at regular intervals.', exampleZh:'该信号是非周期的，不会按固定间隔重复。',
+      storyEn:'The aperiodic signal appeared at atypical times.', storyZh:'这个非周期信号在反常的时间点出现。', audioGb:'audio/aperiodic-word.mp3', audioUs:'', audioLabelGb:'合成朗读', audioExample:'audio/008-aperiodic-example.mp3', audioStory:'audio/008-aperiodic-story.mp3'
+    },{
+      id:9, word:'asexual', phonetic:'英 /ˌeɪˈsekʃuəl/  ·  美 /ˌeɪˈsekʃuəl/  ·  主重音在 sex', meaning:'无性生殖的；无性恋的',
+      parts:[['a-','无、不'],['sexual','性的']], origin:'否定前缀 a- + sexual；在生物学中表示无性生殖，在人的性取向语境中表示无性恋。',
+      mnemonic:'sexual 前面的 a- 表示“没有”，根据语境记成“无性生殖”或“无性恋”。', collocations:[['asexual reproduction','无性生殖'],['asexual organism','无性生殖生物'],['asexual identity','无性恋身份'],['an asexual person','无性恋者']],
+      note:'生物学词义与人的性取向词义要根据上下文区分。', exampleEn:'Some organisms reproduce through asexual reproduction.', exampleZh:'一些生物通过无性生殖繁殖。',
+      storyEn:'In the domain of biology, an asexual organism may reproduce without a mate.', storyZh:'在生物学领域，无性生殖生物可以在没有配偶的情况下繁殖。', audioGb:'audio/asexual-oxford-us-real.mp3', audioUs:'audio/asexual-oxford-us-real.mp3', audioExample:'audio/009-asexual-example.mp3', audioStory:'audio/009-asexual-story.mp3'
+    },{
+      id:10, word:'asymmetry', phonetic:'英 /ˌeɪˈsɪmətri/  ·  美 /ˌeɪˈsɪmətri/  ·  主重音在 sym', meaning:'不对称；不均衡',
+      parts:[['a-','无、不'],['symmetry','对称']], origin:'否定前缀 a- + symmetry，表示“没有对称性”。',
+      mnemonic:'symmetry 是两边对称；a- 把对称打破，就出现 asymmetry。', collocations:[['facial asymmetry','面部不对称'],['information asymmetry','信息不对称'],['asymmetry between','……之间的不均衡'],['structural asymmetry','结构不对称']],
+      note:'既可描述形状左右不对称，也可描述信息、权力等抽象关系不均衡。', exampleEn:'The architect used asymmetry to make the building more dynamic.', exampleZh:'建筑师利用不对称使建筑更有动感。',
+      storyEn:'The asymmetry of the design was atypical but alive with energy.', storyZh:'这个设计的不对称很不寻常，却充满活力。', audioGb:'audio/asymmetry-oxford-us-real.mp3', audioUs:'audio/asymmetry-oxford-us-real.mp3', audioExample:'audio/010-asymmetry-example.mp3', audioStory:'audio/010-asymmetry-story.mp3'
+    },{
+      id:11, word:'afloat', phonetic:'英 /əˈfləʊt/  ·  美 /əˈfloʊt/  ·  重音在第二音节', meaning:'漂浮着；在海上；经济上周转得开的',
+      parts:[['a-','处于……状态'],['float','漂浮']], origin:'这里的 a- 来自历史上的 on，a-float 即“处于漂浮状态”，不是表示否定的 a-。',
+      mnemonic:'a- 表示“处于”，float 表示“漂浮”，合起来就是“漂浮着”。', collocations:[['stay afloat','保持漂浮；维持经营'],['keep something afloat','使……维持下去'],['remain afloat','仍然漂浮；仍能运转'],['financially afloat','财务上维持得住']],
+      note:'除了水上漂浮，也常比喻企业或个人经济上勉强维持。', exampleEn:'The life jacket kept her afloat.', exampleZh:'救生衣使她保持漂浮。',
+      storyEn:'The sailor stayed afloat and looked ahead toward the lights ashore.', storyZh:'水手保持漂浮，望向前方岸上的灯光。', audioGb:'audio/afloat-oxford-us-real.mp3', audioUs:'audio/afloat-oxford-us-real.mp3', audioExample:'audio/011-afloat-example.mp3', audioStory:'audio/011-afloat-story.mp3'
+    },{
+      id:12, word:'ahead', phonetic:'英 /əˈhed/  ·  美 /əˈhed/  ·  重音在第二音节', meaning:'在前面；向前；提前；领先',
+      parts:[['a-','在、向'],['head','前方']], origin:'历史上相当于“在头部或前方”，这里的 a- 不是否定前缀。',
+      mnemonic:'把 head 朝向前方，就是 ahead：在前面、向前。', collocations:[['ahead of','在……前面；领先'],['go ahead','继续；开始吧'],['plan ahead','提前计划'],['straight ahead','正前方']],
+      note:'既表示空间上的前方，也表示时间上的提前或竞争中的领先。', exampleEn:'A difficult journey still lies ahead.', exampleZh:'前方仍有一段艰难的旅程。',
+      storyEn:'She looked ahead, put her apathy aside, and kept the boat afloat.', storyZh:'她望向前方，把冷漠抛到一边，让船继续漂浮。', audioGb:'audio/ahead-oxford-us-real.mp3', audioUs:'audio/ahead-oxford-us-real.mp3', audioExample:'audio/012-ahead-example.mp3', audioStory:'audio/012-ahead-story.mp3'
+    },{
+      id:13, word:'alive', phonetic:'英 /əˈlaɪv/  ·  美 /əˈlaɪv/  ·  重音在第二音节', meaning:'活着的；有活力的；仍存在的',
+      parts:[['a-','处于……状态'],['live/life','生命']], origin:'来自古英语“处于生命中”的表达；这里的 a- 表示状态，不是否定。',
+      mnemonic:'处于 life 的状态，就是 alive：活着的。', collocations:[['alive and well','健在；依然盛行'],['come alive','活跃起来'],['keep something alive','使……继续存在'],['feel alive','感到充满活力']],
+      note:'alive 通常作表语，如 be alive；放在名词前一般用 living，例如 living creatures。', exampleEn:'The missing hikers were found alive.', exampleZh:'失踪的徒步者被发现时还活着。',
+      storyEn:'Once ashore, the exhausted sailors felt fully alive.', storyZh:'一上岸，筋疲力尽的水手们真切地感到自己还活着。', audioGb:'audio/alive-oxford-us-real.mp3', audioUs:'audio/alive-oxford-us-real.mp3', audioExample:'audio/013-alive-example.mp3', audioStory:'audio/013-alive-story.mp3'
+    },{
+      id:14, word:'aside', phonetic:'英 /əˈsaɪd/  ·  美 /əˈsaɪd/  ·  重音在第二音节', meaning:'在旁边；到一边；撇开；题外话',
+      parts:[['a-','在、向'],['side','旁边']], origin:'历史上相当于 on side，表示“在旁边或向一边”。',
+      mnemonic:'向 side 移动，就是 aside：到一边；把事情放到一边。', collocations:[['set something aside','把……放在一边；留出'],['put something aside','暂时不考虑'],['step aside','让开；退位'],['take somebody aside','把某人叫到一旁']],
+      note:'可作副词；名词 aside 还表示戏剧中的旁白或题外话。', exampleEn:'She set her doubts aside and moved ahead.', exampleZh:'她把疑虑放到一边，继续前进。',
+      storyEn:'He put his apathy aside and amended the plan.', storyZh:'他抛开冷漠，修改了计划。', audioGb:'audio/aside-oxford-us-real.mp3', audioUs:'audio/aside-oxford-us-real.mp3', audioExample:'audio/014-aside-example.mp3', audioStory:'audio/014-aside-story.mp3'
+    },{
+      id:15, word:'ashore', phonetic:'英 /əˈʃɔː/  ·  美 /əˈʃɔːr/  ·  重音在第二音节', meaning:'向岸上；在岸上',
+      parts:[['a-','在、向'],['shore','岸']], origin:'历史上相当于 on shore，表示“在岸上或向岸上”。',
+      mnemonic:'向 shore 移动，就是 ashore：上岸。', collocations:[['go ashore','上岸'],['come ashore','来到岸上'],['bring somebody ashore','把某人带上岸'],['wash ashore','被冲上岸']],
+      note:'主要用作副词，描述从船上或水中到岸上的移动或位置。', exampleEn:'The rescue team brought everyone safely ashore.', exampleZh:'救援队把所有人安全带上岸。',
+      storyEn:'After staying afloat all night, the sailor finally came ashore alive.', storyZh:'在水上漂了一整夜后，水手终于活着上了岸。', audioGb:'audio/ashore-oxford-us-real.mp3', audioUs:'audio/ashore-oxford-us-real.mp3', audioExample:'audio/015-ashore-example.mp3', audioStory:'audio/015-ashore-story.mp3'
+    },{
+      id:16, word:'akin', phonetic:'英 /əˈkɪn/  ·  美 /əˈkɪn/  ·  重音在第二音节', meaning:'相似的；类似的；有亲属关系的',
+      parts:[['akin','历史上意为“属于同一家族”']], origin:'来自历史表达 of kin（同族的、亲属的），不建议按现代否定前缀 a- 拆解。',
+      mnemonic:'kin 是亲属；akin 原本像“同族”，引申为性质相近、类似。', collocations:[['akin to something','与某事物相似'],['something akin to','类似于……的事物'],['closely akin','非常相近']],
+      note:'常用结构是 be akin to，语气比 similar to 稍正式。', exampleEn:'His explanation is akin to a scientific theory.', exampleZh:'他的解释类似于一种科学理论。',
+      storyEn:'Apathy is not akin to peace; it is a lack of concern.', storyZh:'冷漠并不等同于平静；它是缺乏关心。', audioGb:'audio/akin-oxford-us-real.mp3', audioUs:'audio/akin-oxford-us-real.mp3', audioExample:'audio/016-akin-example.mp3', audioStory:'audio/016-akin-story.mp3'
+    },{
+      id:17, word:'alight', phonetic:'英 /əˈlaɪt/  ·  美 /əˈlaɪt/  ·  重音在第二音节', meaning:'下车；降落；燃烧着的；明亮的',
+      parts:[['a-','历史前缀'],['light','落下；光、火']], origin:'动词源自古英语，表示“下来、落下”；形容词 alight 表示“点着的、明亮的”。两种词义应按语境分别记忆。',
+      mnemonic:'从车上轻轻落下是 alight；被 light 点亮也可以是 alight。', collocations:[['alight from a train','从火车下来'],['alight on something','落在某物上；偶然想到'],['set something alight','点燃某物'],['be alight with','因……而明亮']],
+      note:'表示“下车”时较正式；日常英语更常用 get off。过去式和过去分词是 alighted 或 alit。', exampleEn:'The passengers alighted from the train.', exampleZh:'乘客们下了火车。',
+      storyEn:'They came ashore, alighted from the bus, and found the town alive with light.', storyZh:'他们上岸后下了公交车，发现整座城灯火通明、生机勃勃。', audioGb:'audio/alight-oxford-us-real.mp3', audioUs:'audio/alight-oxford-us-real.mp3', audioExample:'audio/017-alight-example.mp3', audioStory:'audio/017-alight-story.mp3'
+    },{
+      id:18, word:'amend', phonetic:'英 /əˈmend/  ·  美 /əˈmend/  ·  重音在第二音节', meaning:'修订；修改；改正',
+      parts:[['amend','修正、改进']], origin:'经法语 amender 来自拉丁语 emendare（纠正错误）。这里不能按否定前缀 a- + mend 强拆。',
+      mnemonic:'看到 amend 就联想“把有错误的文本修正得更好”。', collocations:[['amend a law','修订法律'],['amend the constitution','修改宪法'],['amend a document','修改文件'],['amend something to do something','修改某物以便……']],
+      note:'常用于法律、规则、合同和正式文件；名词是 amendment。', exampleEn:'The committee voted to amend the law.', exampleZh:'委员会投票决定修订这项法律。',
+      storyEn:'The committee set apathy aside and amended the law to help families in abject poverty.', storyZh:'委员会抛开冷漠，修订法律以帮助处于赤贫中的家庭。', audioGb:'audio/amend-oxford-us-real.mp3', audioUs:'audio/amend-oxford-us-real.mp3', audioExample:'audio/018-amend-example.mp3', audioStory:'audio/018-amend-story.mp3'
+    },{
+      id:19,word:'arise',phonetic:'英 /əˈraɪz/ · 美 /əˈraɪz/',meaning:'出现；发生；起立',parts:[['a-','向上、出现'],['rise','上升']],origin:'表示“向上升起”，引申为问题或机会出现。',mnemonic:'事情从无到有、从低处升起，就是 arise。',collocations:[['arise from','由……引起'],['arise out of','因……产生'],['questions arise','问题出现']],note:'不及物动词；过去式 arose，过去分词 arisen。',exampleEn:'Several problems arose during the project.',exampleZh:'项目期间出现了几个问题。',storyEn:'New questions arose in an atypical scientific domain.',storyZh:'一个非典型的科学领域出现了新问题。',audioGb:'audio/arise-oxford-gb-real.mp3',audioUs:'audio/arise-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:20,word:'awake',phonetic:'英 /əˈweɪk/ · 美 /əˈweɪk/',meaning:'醒着的；唤醒；意识到',parts:[['a-','处于……状态'],['wake','醒来']],origin:'表示处于醒着的状态；也可作动词“唤醒”。',mnemonic:'wake 是醒来，awake 是已经醒着。',collocations:[['wide awake','完全清醒'],['stay awake','保持清醒'],['awake to','意识到']],note:'awake 可作形容词或动词；过去式 awoke，过去分词 awoken/awaked。',exampleEn:'I was still awake when the alarm rang.',exampleZh:'闹钟响时我还醒着。',storyEn:'She stayed awake and looked ahead for a safe shore.',storyZh:'她保持清醒，向前寻找安全的岸边。',audioGb:'audio/awake-oxford-gb-real.mp3',audioUs:'audio/awake-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:21,word:'abase',phonetic:'英 /əˈbeɪs/ · 美 /əˈbeɪs/',meaning:'使卑微；使谦卑；降低身份',parts:[['a-','向下'],['base','低、基础']],origin:'a-（向下）+ base（低处），即把某人的地位压低。',mnemonic:'把人推到 base 的低处，就是 abase。',collocations:[['abase oneself','自贬身份；卑躬屈膝'],['abase somebody','使某人受辱']],note:'常用于 abase oneself，表示为了求助或取悦而自我贬低。',exampleEn:'He refused to abase himself by begging for approval.',exampleZh:'他拒绝通过乞求认可来贬低自己。',storyEn:'No one should abase themselves to escape abject poverty.',storyZh:'任何人都不应为了摆脱赤贫而自我贬低。',audioGb:'audio/abase-oxford-gb-real.mp3',audioUs:'audio/abase-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:22,word:'afresh',phonetic:'英 /əˈfreʃ/ · 美 /əˈfreʃ/',meaning:'重新；从头开始',parts:[['a-','以……方式'],['fresh','新的']],origin:'以新的方式重新开始。',mnemonic:'fresh 是新鲜的，afresh 就是重新来一次。',collocations:[['start afresh','重新开始'],['begin afresh','重新开始'],['look at something afresh','以新的眼光看待']],note:'多作副词，常与 start、begin、look 连用。',exampleEn:'After the failure, they decided to start afresh.',exampleZh:'失败后，他们决定重新开始。',storyEn:'She put apathy aside and began afresh in a new domain.',storyZh:'她把冷漠放到一边，在新的领域重新开始。',audioGb:'audio/afresh-oxford-gb-real.mp3',audioUs:'audio/afresh-oxford-us-real.mp3',audioExample:'',audioStory:''},
+    {id:23,word:'amass',phonetic:'英 /əˈmæs/ · 美 /əˈmæs/',meaning:'积累；积聚',parts:[['a-','向一起'],['mass','大量、团块']],origin:'把许多东西聚成一大团，即积累。',mnemonic:'mass 是一大堆，amass 就是把东西聚成一大堆。',collocations:[['amass wealth','积累财富'],['amass a fortune','积累财富'],['amass evidence','收集证据']],note:'通常指逐渐积累大量财富、知识、证据或物品。',exampleEn:'She amassed a large collection of research papers.',exampleZh:'她积累了大量研究论文。',storyEn:'The team amassed evidence of an atypical, aperiodic signal.',storyZh:'团队收集了关于一个非典型非周期信号的证据。',audioGb:'audio/amass-oxford-gb-real.mp3',audioUs:'audio/amass-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:24,word:'abnormal',phonetic:'英 /æbˈnɔːml/ · 美 /æbˈnɔːrml/',meaning:'不正常的；反常的；异常的',parts:[['ab-','离开'],['normal','正常的']],origin:'偏离正常状态，即 abnormal。',mnemonic:'离开 normal 的轨道，就是 abnormal。',collocations:[['abnormal behavior','异常行为'],['abnormal results','异常结果'],['abnormally high','异常高']],note:'比 unusual 更强调偏离正常标准，常用于医学、科学和统计语境。',exampleEn:'The test revealed an abnormal result.',exampleZh:'检测显示结果异常。',storyEn:'An abnormal result led the team to study an atypical pattern.',storyZh:'异常结果促使团队研究一种非典型模式。',audioGb:'audio/abnormal-oxford-gb-real.mp3',audioUs:'audio/abnormal-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:25,word:'abrupt',phonetic:'英 /əˈbrʌpt/ · 美 /əˈbrʌpt/',meaning:'突然的；唐突的；粗鲁的',parts:[['ab-','离开、断开'],['rupt','破裂']],origin:'来自“突然断裂”的意象，表示突然或不连贯。',mnemonic:'像被 rupt（撕裂）一样突然中断，就是 abrupt。',collocations:[['abrupt change','突然变化'],['abrupt end','突然结束'],['abrupt manner','唐突的态度']],note:'既可描述事件突然，也可描述人的说话方式生硬无礼。',exampleEn:'The meeting came to an abrupt end.',exampleZh:'会议突然结束了。',storyEn:'An abrupt change in the aperiodic signal surprised the researchers.',storyZh:'非周期信号的突然变化让研究人员感到意外。',audioGb:'audio/abrupt-oxford-gb-real.mp3',audioUs:'audio/abrupt-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:26,word:'absent',phonetic:'英 /ˈæbsənt/ · 美 /ˈæbsənt/',meaning:'缺席的；不在的；缺乏的',parts:[['ab-','离开'],['sent','在场、出现']],origin:'离开现场，即缺席；也可表示某物缺乏。',mnemonic:'人离开了现场，就是 absent。',collocations:[['absent from school','缺课'],['absent-minded','心不在焉的'],['absent without leave','擅自缺席']],note:'名词 absence；形容词重音在第一音节，动词 absent oneself 重音也常在第一音节。',exampleEn:'He was absent from work for three days.',exampleZh:'他三天没有上班。',storyEn:'The usual applause was absent after the abrupt announcement.',storyZh:'突然宣布之后，往常的掌声没有出现。',audioGb:'audio/absent-oxford-gb-real.mp3',audioUs:'audio/absent-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:27,word:'absorb',phonetic:'英 /əbˈzɔːb/ · 美 /əbˈzɔːrb/',meaning:'吸收；吸引注意；理解；承担',parts:[['ab-','向内、离开'],['sorb','吸收']],origin:'核心含义是把液体、信息或注意力吸进去。',mnemonic:'海绵吸收水，读书吸收知识，都是 absorb。',collocations:[['absorb water','吸水'],['absorb information','吸收信息'],['absorb somebody’s attention','吸引某人的注意'],['absorb the cost','承担成本']],note:'过去式和过去分词 absorbed。',exampleEn:'Plants absorb water through their roots.',exampleZh:'植物通过根部吸收水分。',storyEn:'She absorbed the evidence and amended the plan.',storyZh:'她理解了证据并修改了计划。',audioGb:'audio/absorb-oxford-gb-real.mp3',audioUs:'',audioLabelGb:'牛津词典 · 英'},
+    {id:28,word:'abstract',phonetic:'英 /ˈæbstrækt/（形容词）· /æbˈstrækt/（动词）',meaning:'抽象的；摘要；提取；抽象化',parts:[['abs-','离开'],['tract','拉、引']],origin:'把具体事物“拉开”到概念层面；动词可表示提取或概括。',mnemonic:'从具体细节中拉出核心概念，就是 abstract。',collocations:[['abstract idea','抽象概念'],['abstract noun','抽象名词'],['an abstract of a paper','论文摘要'],['abstract something from','从……提取']],note:'形容词重音在第一音节；动词和名词常重音在第二音节。',exampleEn:'Justice is an abstract idea.',exampleZh:'正义是一个抽象概念。',storyEn:'The researcher wrote an abstract about an atypical signal.',storyZh:'研究人员写了一篇关于非典型信号的摘要。',audioGb:'audio/abstract-oxford-gb-real.mp3',audioUs:'',audioLabelGb:'牛津词典 · 英'},
+    {id:29,word:'abuse',phonetic:'英 /əˈbjuːs/（动词）· /əˈbjuːs/（名词）',meaning:'虐待；滥用；辱骂；滥用行为',parts:[['ab-','错误、过度'],['use','使用']],origin:'错误或过度地使用某人、某物或权力。',mnemonic:'use 用错、用过头，就变成 abuse。',collocations:[['abuse power','滥用权力'],['child abuse','虐待儿童'],['substance abuse','药物滥用'],['verbal abuse','言语辱骂']],note:'名词和动词在英美口语中通常都重读第二音节；语境决定是虐待、滥用还是辱骂。',exampleEn:'The report exposed an abuse of power.',exampleZh:'报告揭露了一起滥用权力的行为。',storyEn:'An amoral system can abuse data and deepen social asymmetry.',storyZh:'不考虑道德的系统可能滥用数据，加剧社会不对称。',audioGb:'audio/abuse-oxford-gb-real.mp3',audioUs:'audio/abuse-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:30,word:'abduct',phonetic:'英 /əbˈdʌkt/ · 美 /əbˈdʌkt/',meaning:'绑架；劫持；（用力）拉走',parts:[['ab-','离开'],['duct','引导、带领']],origin:'把人从原处带走，即绑架或劫持。',mnemonic:'duct 是带领，ab- 表示带离原处。',collocations:[['abduct a child','绑架儿童'],['abduct somebody from','从……绑走某人'],['abducted person','被绑架者']],note:'名词 abduction；不要与 adopt（收养）混淆。',exampleEn:'The police rescued the abducted child.',exampleZh:'警方救出了被绑架的孩子。',storyEn:'The rescue team brought the abducted child safely ashore.',storyZh:'救援队把被绑架的孩子安全带上岸。',audioGb:'audio/abduct-oxford-gb-real.mp3',audioUs:'audio/abduct-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:31,word:'abstain',phonetic:'英 /əbˈsteɪn/ · 美 /əbˈsteɪn/',meaning:'戒除；避免；投弃权票',parts:[['abs-','离开'],['tain','持有']],origin:'词源含有“保持远离、保持不参与”的含义。',mnemonic:'把自己从某事旁边保持开，就是 abstain：戒除或不参与。',collocations:[['abstain from alcohol','戒酒'],['abstain from voting','投弃权票'],['abstain from doing something','避免做某事']],note:'固定搭配 abstain from，不能直接接动词原形。',exampleEn:'He decided to abstain from alcohol.',exampleZh:'他决定戒酒。',storyEn:'She abstained from the debate but looked ahead to its consequences.',storyZh:'她没有参与辩论，却考虑了它的后果。',audioGb:'audio/abstain-oxford-gb-real.mp3',audioUs:'audio/abstain-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:32,word:'abdicate',phonetic:'英 /ˈæbdɪkeɪt/ · 美 /ˈæbdɪkeɪt/',meaning:'退位；放弃责任或权力',parts:[['ab-','离开'],['dic','说、宣布']],origin:'宣布离开王位或责任位置。',mnemonic:'统治者宣布离开自己的职位，就是 abdicate。',collocations:[['abdicate the throne','退位'],['abdicate responsibility','逃避责任'],['abdicate power','放弃权力']],note:'现代英语中常用于 abdicate responsibility，批评某人不承担应有责任。',exampleEn:'A leader must not abdicate responsibility.',exampleZh:'领导者不应逃避责任。',storyEn:'An amoral leader abdicated responsibility for the abject poverty around him.',storyZh:'一位不顾道德的领导者逃避了对身边赤贫现象的责任。',audioGb:'audio/abdicate-oxford-gb-real.mp3',audioUs:'audio/abdicate-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:33,word:'abjure',phonetic:'英 /əbˈdʒʊə/ · 美 /əbˈdʒʊr/',meaning:'发誓放弃；公开声明放弃',parts:[['ab-','离开'],['jure','发誓、法律']],origin:'通过誓言放弃某种信仰、习惯或权利。',mnemonic:'jure 与 oath（誓言）有关，ab-jure 就是发誓离开。',collocations:[['abjure violence','发誓放弃暴力'],['abjure a belief','声明放弃信念'],['abjure one’s former life','发誓放弃从前的生活']],note:'正式书面词，常表示郑重、公开地放弃。',exampleEn:'She abjured her former political beliefs.',exampleZh:'她公开声明放弃了从前的政治信念。',storyEn:'The former official abjured apathy and promised to amend the law.',storyZh:'那位前官员发誓不再冷漠，并承诺修改法律。',audioGb:'audio/abjure-oxford-gb-real.mp3',audioUs:'audio/abjure-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:34,word:'abrade',phonetic:'英 /əˈbreɪd/ · 美 /əˈbreɪd/',meaning:'磨损；擦伤；磨蚀',parts:[['ab-','离开、去除'],['rad/ras','刮、擦']],origin:'通过摩擦把表面磨掉。',mnemonic:'反复擦刮，表面就被 abrade 磨损。',collocations:[['abrade the skin','擦伤皮肤'],['abraded surface','磨损的表面'],['abrade against','与……摩擦']],note:'名词 abrasion；多用于材料、皮肤和地质侵蚀。',exampleEn:'Rough fabric can abrade the skin.',exampleZh:'粗糙的布料可能擦伤皮肤。',storyEn:'The abrasive waves abraded the atypical structure over time.',storyZh:'具有磨蚀性的海浪逐渐磨损了那个异常结构。',audioGb:'audio/abrade-oxford-gb-real.mp3',audioUs:'audio/abrade-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:35,word:'abrogate',phonetic:'英 /ˈæbrəɡeɪt/ · 美 /ˈæbrəɡeɪt/',meaning:'废除；取消（法律、协议）',parts:[['ab-','离开'],['rog','要求、法律']],origin:'正式取消一项法律、权利或协议。',mnemonic:'把旧规则从法律体系中拿走，就是 abrogate。',collocations:[['abrogate a treaty','废除条约'],['abrogate a law','废除法律'],['abrogate an agreement','取消协议']],note:'正式法律词，比 repeal 更书面。',exampleEn:'The government voted to abrogate the outdated treaty.',exampleZh:'政府投票废除了过时的条约。',storyEn:'The parliament abrogated a law that deepened abnormal inequality.',storyZh:'议会废除了一项加剧异常不平等的法律。',audioGb:'audio/abrogate-oxford-gb-real.mp3',audioUs:'audio/abrogate-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:36,word:'abscise',phonetic:'英 /æbˈsaɪz/ · 美 /æbˈsaɪz/',meaning:'切除；切断；（植物）脱落',parts:[['ab-','离开'],['scise','切割']],origin:'从主体上切开或分离。',mnemonic:'把一部分切离主体，就是 abscise。',collocations:[['abscise a branch','切除树枝'],['abscise tissue','切除组织'],['abscission zone','脱落区']],note:'专业词，常见于植物学、医学和实验操作。',exampleEn:'The botanist observed where the leaf would abscise.',exampleZh:'植物学家观察了叶片将要脱落的位置。',storyEn:'The researcher abscised an atypical section for further analysis.',storyZh:'研究人员切下了一段异常部分以作进一步分析。',audioGb:'audio/abscise-word.mp3',audioUs:'',audioLabelGb:'合成朗读'},
+    {id:37,word:'abstinence',phonetic:'英 /ˈæbstɪnəns/ · 美 /ˈæbstɪnəns/',meaning:'戒除；节制；禁欲',parts:[['abs-','离开'],['tain','持有'],['-ence','状态']],origin:'保持自己远离某种行为或物质的状态。',mnemonic:'abstain 的名词形式：主动远离，就是 abstinence。',collocations:[['abstinence from alcohol','戒酒'],['sexual abstinence','禁欲'],['a period of abstinence','一段戒除期']],note:'强调主动克制；与 abstain from 同源。',exampleEn:'Abstinence from alcohol improved his health.',exampleZh:'戒酒改善了他的健康。',storyEn:'Her abstinence from harmful habits helped her stay alive and focused.',storyZh:'戒除有害习惯帮助她保持健康和专注。',audioGb:'audio/abstinence-oxford-gb-real.mp3',audioUs:'audio/abstinence-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:38,word:'abstruse',phonetic:'英 /əbˈstruːs/ · 美 /əbˈstruːs/',meaning:'深奥难懂的；晦涩的',parts:[['abs-','离开'],['trud/strud','推、挤']],origin:'像被推到很远处的知识，难以接近和理解。',mnemonic:'知识被推得太远，读者够不着，就是 abstruse。',collocations:[['an abstruse theory','深奥的理论'],['abstruse language','晦涩的语言'],['abstruse subject','难懂的主题']],note:'形容内容难懂，不等于 simply difficult；常带有专业、晦涩色彩。',exampleEn:'The book explains an abstruse theory in simple language.',exampleZh:'这本书用简单语言解释了一个深奥理论。',storyEn:'The abstruse paper described an aperiodic signal.',storyZh:'这篇晦涩的论文描述了一种非周期信号。',audioGb:'audio/abstruse-oxford-gb-real.mp3',audioUs:'audio/abstruse-word.mp3',audioLabelUs:'合成朗读'},
+    {id:39,word:'accelerate',phonetic:'英 /əkˈseləreɪt/ · 美 /əkˈseləreɪt/',meaning:'加速；加快；促进',parts:[['ac-','向、加强'],['celer','快'],['-ate','动词后缀']],origin:'核心词根 celer 表示快，使速度变快。',mnemonic:'celerity 是速度，accelerate 就是让速度加快。',collocations:[['accelerate growth','促进增长'],['accelerate the process','加快进程'],['accelerate rapidly','迅速加速']],note:'可指物理速度，也可指进程、变化或经济增长加快。',exampleEn:'The new policy may accelerate economic growth.',exampleZh:'新政策可能促进经济增长。',storyEn:'The atypical signal began to accelerate before it disappeared.',storyZh:'异常信号在消失前开始加速。',audioGb:'audio/accelerate-oxford-gb-real.mp3',audioUs:'audio/accelerate-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:40,word:'accompany',phonetic:'英 /əˈkʌmpəni/ · 美 /əˈkʌmpəni/',meaning:'陪伴；伴随；为……伴奏',parts:[['ac-','与、一起'],['company','陪伴、同伴']],origin:'与 company（同伴）相关，表示与某人一起。',mnemonic:'company 是陪伴，accompany 就是陪着一起走。',collocations:[['accompany somebody home','陪某人回家'],['be accompanied by','由……陪同'],['accompany a song','为歌曲伴奏']],note:'不能写成 accompany with；直接说 accompany somebody。',exampleEn:'A guide accompanied us through the museum.',exampleZh:'一名导游陪我们参观了博物馆。',storyEn:'A guide accompanied the researchers into an abstruse domain.',storyZh:'一名向导陪研究人员进入了一个深奥的领域。',audioGb:'audio/accompany-oxford-gb-real.mp3',audioUs:'audio/accompany-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:41,word:'accumulate',phonetic:'英 /əˈkjuːmjuleɪt/ · 美 /əˈkjuːmjəleɪt/',meaning:'积累；积聚；逐渐增加',parts:[['ac-','向一起'],['cumul','堆积'],['-ate','动词后缀']],origin:'把东西堆积在一起，逐渐增加数量。',mnemonic:'cumulative 是累积的，accumulate 就是一点点堆起来。',collocations:[['accumulate wealth','积累财富'],['accumulate experience','积累经验'],['dust accumulates','灰尘积聚']],note:'你输入的 `accuulate` 少了一个 `m`，标准拼写是 `accumulate`。',exampleEn:'Small savings can accumulate over time.',exampleZh:'小额储蓄可以随着时间积少成多。',storyEn:'The team accumulated evidence and amended the plan.',storyZh:'团队积累了证据并修改了计划。',audioGb:'audio/accumulate-oxford-gb-real.mp3',audioUs:'audio/accumulate-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:42,word:'affirm',phonetic:'英 /əˈfɜːm/ · 美 /əˈfɜːrm/',meaning:'肯定；确认；断言',parts:[['af-','向、加强'],['firm','坚定的']],origin:'使某个观点变得坚定、明确，即肯定或确认。',mnemonic:'firm 是坚定，affirm 就是坚定地说“是的”。',collocations:[['affirm a belief','确认信念'],['affirm that','断言……'],['affirm one’s commitment','确认承诺']],note:'名词 affirmation；正式语境中常指确认法律或原则。',exampleEn:'The evidence affirmed her original conclusion.',exampleZh:'证据证实了她最初的结论。',storyEn:'The results affirmed that the atypical pattern was real.',storyZh:'结果证实了那个非典型模式确实存在。',audioGb:'audio/affirm-oxford-gb-real.mp3',audioUs:'audio/affirm-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:43,word:'aggravate',phonetic:'英 /ˈæɡrəveɪt/ · 美 /ˈæɡrəveɪt/',meaning:'加重；使恶化；激怒',parts:[['ag-','加强'],['grav','重']],origin:'使问题变得更重，引申为恶化或惹怒。',mnemonic:'grav 是重，aggravate 就是让负担变重。',collocations:[['aggravate a problem','使问题恶化'],['aggravate an injury','加重伤势'],['aggravate somebody','激怒某人']],note:'英美用法中“激怒”义常见；正式写作中多指使情况恶化。',exampleEn:'Lack of sleep can aggravate the problem.',exampleZh:'睡眠不足可能使问题恶化。',storyEn:'Public apathy aggravated the abnormal inequality.',storyZh:'公众冷漠加剧了异常的不平等。',audioGb:'audio/aggravate-oxford-gb-real.mp3',audioUs:'audio/aggravate-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:44,word:'appease',phonetic:'英 /əˈpiːz/ · 美 /əˈpiːz/',meaning:'安抚；平息；姑息',parts:[['ap-','向、靠近'],['pease','平静、和平']],origin:'使对方平静下来，满足要求以停止冲突。',mnemonic:'把愤怒的人带回 peace 的状态，就是 appease。',collocations:[['appease public opinion','安抚公众舆论'],['appease a demand','满足要求以平息事态'],['appease somebody with','用……安抚某人']],note:'常含“为避免麻烦而姑息让步”的批评意味。',exampleEn:'The apology was intended to appease the angry customers.',exampleZh:'这份道歉是为了安抚愤怒的顾客。',storyEn:'The leader tried to appease the public but ignored abject poverty.',storyZh:'领导者试图安抚公众，却忽视了赤贫问题。',audioGb:'audio/appease-oxford-gb-real.mp3',audioUs:'audio/appease-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:45,word:'applause',phonetic:'英 /əˈplɔːz/ · 美 /əˈplɔːz/',meaning:'掌声；喝彩；赞许',parts:[['ap-','向、加强'],['plaus','拍、鼓掌']],origin:'与拍手表达赞许有关。',mnemonic:'听到 applause 就想象一片响亮的掌声。',collocations:[['a round of applause','一阵掌声'],['thunderous applause','雷鸣般的掌声'],['win applause','赢得掌声']],note:'不可数名词，通常不说 an applause。',exampleEn:'The speaker received warm applause.',exampleZh:'演讲者赢得了热烈掌声。',storyEn:'The unusual but effective plan earned applause.',storyZh:'这个不寻常但有效的计划赢得了掌声。',audioGb:'audio/applause-oxford-gb-real.mp3',audioUs:'audio/applause-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:46,word:'appoint',phonetic:'英 /əˈpɔɪnt/ · 美 /əˈpɔɪnt/',meaning:'任命；委派；约定',parts:[['ap-','向、指定'],['point','点、指向']],origin:'把某人指向一个职位或把时间指定下来。',mnemonic:'point 指向一个职位，就是 appoint 任命；指向一个时间，就是约定。',collocations:[['appoint somebody chair','任命某人为主席'],['appoint somebody to a position','任命某人担任职务'],['appoint a time','约定时间']],note:'名词 appointment；结构 appoint somebody to do something 也很常见。',exampleEn:'The board appointed her to lead the project.',exampleZh:'董事会任命她领导这个项目。',storyEn:'The board appointed an expert to amend the policy.',storyZh:'董事会任命一名专家修改政策。',audioGb:'audio/appoint-oxford-gb-real.mp3',audioUs:'audio/appoint-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:47,word:'appreciate',phonetic:'英 /əˈpriːʃieɪt/ · 美 /əˈpriːʃieɪt/',meaning:'欣赏；感激；理解；增值',parts:[['ap-','加强、向'],['preci','价值、价格'],['-ate','动词后缀']],origin:'认识到某事物的价值，因此可以表示欣赏、感激或理解。',mnemonic:'preci 是 price/价值，appreciate 就是看见价值、表示感激。',collocations:[['appreciate somebody’s help','感谢某人的帮助'],['appreciate the importance','理解重要性'],['greatly appreciate','非常感谢'],['property appreciates','房产增值']],note:'appreciate doing something；不要说 appreciate to do。',exampleEn:'I appreciate your help with the report.',exampleZh:'感谢你帮助我完成报告。',storyEn:'The team appreciated the evidence and amended the proposal.',storyZh:'团队理解了证据的价值，并修改了提案。',audioGb:'audio/appreciate-oxford-gb-real.mp3',audioUs:'audio/appreciate-oxford-us-real.mp3',audioLabelGb:'牛津词典 · 英'},
+    {id:48,word:'abandon',phonetic:'英 /əˈbændən/ · 美 /əˈbændən/',meaning:'放弃；抛弃；离弃；放纵',parts:[['abandon','整体词源：置于控制之外']],origin:'经法语进入英语，核心是放弃控制或不再继续，不建议按现代前缀硬拆。',mnemonic:'不再控制、不再坚持，把某物彻底留下，就是 abandon。',collocations:[['abandon a plan','放弃计划'],['abandon hope','放弃希望'],['abandon a vehicle','弃置车辆'],['with abandon','放纵地；尽情地']],note:'考研常见熟词僻义：with abandon 表示“尽情地、放纵地”。',exampleEn:'They had to abandon the project because of rising costs.',exampleZh:'由于成本上升，他们不得不放弃这个项目。',storyEn:'The team refused to abandon hope when an abrupt problem arose.',storyZh:'突然出现问题时，团队拒绝放弃希望。',audioGb:'audio/abandon-oxford-gb.mp3',audioUs:'audio/abandon-oxford-us.mp3'},
+    {id:49,word:'abide',phonetic:'英 /əˈbaɪd/ · 美 /əˈbaɪd/',meaning:'遵守；忍受；停留',parts:[['a-','处于、持续'],['bide','停留、等待']],origin:'古英语词源，核心是持续停留；现代最常见于 abide by。',mnemonic:'一直 bide 在规则之内，就是 abide by：遵守。',collocations:[['abide by the law','遵守法律'],['abide by a decision','服从决定'],['cannot abide','无法忍受']],note:'考研重点搭配是 abide by；过去式和过去分词均为 abode 或 abided，现代常用 abided。',exampleEn:'All participants must abide by the rules.',exampleZh:'所有参与者都必须遵守规则。',storyEn:'The appointed team agreed to abide by the amended policy.',storyZh:'受任命的团队同意遵守修订后的政策。',audioGb:'audio/abide-oxford-gb.mp3',audioUs:'audio/abide-oxford-us.mp3'},
+    {id:50,word:'abroad',phonetic:'英 /əˈbrɔːd/ · 美 /əˈbrɔːd/',meaning:'在国外；到国外；广为流传',parts:[['a-','在、向'],['broad','广阔之处']],origin:'历史上表示走到广阔或外面的地方，后来主要指在国外。',mnemonic:'走向 broad 的外部世界，就是 abroad。',collocations:[['go abroad','出国'],['study abroad','出国留学'],['travel abroad','出国旅行'],['rumours abroad','流传的传闻']],note:'abroad 是副词，前面通常不加 to：go abroad，不说 go to abroad。',exampleEn:'Many students choose to study abroad.',exampleZh:'许多学生选择出国留学。',storyEn:'She went abroad to access an abundant collection of research materials.',storyZh:'她出国查阅丰富的研究资料。',audioGb:'audio/abroad-oxford-gb.mp3',audioUs:'audio/abroad-oxford-us.mp3'},
+    {id:51,word:'abundant',phonetic:'英 /əˈbʌndənt/ · 美 /əˈbʌndənt/',meaning:'丰富的；充裕的；大量的',parts:[['abound','大量存在'],['-ant','形容词后缀']],origin:'与 abound 同源，表示多到溢出，因此是丰富、充裕。',mnemonic:'东西多得 abound（大量存在），就是 abundant。',collocations:[['abundant resources','丰富资源'],['abundant evidence','大量证据'],['abundant in','富含……'],['an abundant supply','充足供应']],note:'be abundant in 表示“富含”；名词 abundance。',exampleEn:'The region is abundant in natural resources.',exampleZh:'该地区自然资源丰富。',storyEn:'Abundant evidence helped the researchers affirm their conclusion.',storyZh:'大量证据帮助研究人员确认了结论。',audioGb:'audio/abundant-oxford-gb.mp3',audioUs:'audio/abundant-oxford-us.mp3'},
+    {id:52,word:'access',phonetic:'英 /ˈækses/ · 美 /ˈækses/',meaning:'进入权；使用权；通道；访问；获取',parts:[['ac-','向、接近'],['cess','走、前进']],origin:'向某处走近并进入，形成“进入、获取、访问”的核心词义。',mnemonic:'向目标走近并进入，就是 access。',collocations:[['have access to','有权使用；可以接触'],['gain access to','获得进入权'],['access information','获取信息'],['internet access','互联网接入']],note:'考研高频结构 have access to，其中 to 是介词，后接名词或动名词。',exampleEn:'Students have access to the online library.',exampleZh:'学生可以使用在线图书馆。',storyEn:'Access to abundant information can accelerate research.',storyZh:'获取丰富信息可以加快研究。',audioGb:'audio/access-oxford-gb.mp3',audioUs:'audio/access-oxford-us.mp3'},
+    {id:53,word:'accomplish',phonetic:'英 /əˈkʌmplɪʃ/ · 美 /əˈkɑːmplɪʃ/',meaning:'完成；实现；达到',parts:[['ac-','向、加强'],['compl','充满、完成'],['-ish','动词后缀']],origin:'把事情填充完整，即完成目标或任务。',mnemonic:'把计划补充完整，就 accomplish 了任务。',collocations:[['accomplish a task','完成任务'],['accomplish a goal','实现目标'],['accomplish much','取得很多成果']],note:'你输入的 `acomplish` 少了一个 `c`，正确拼写是 `accomplish`；名词 accomplishment。',exampleEn:'The team accomplished its goal ahead of schedule.',exampleZh:'团队提前完成了目标。',storyEn:'The team accumulated evidence and accomplished an abstruse task.',storyZh:'团队积累证据，完成了一项深奥的任务。',audioGb:'audio/accomplish-oxford-gb.mp3',audioUs:'audio/accomplish-oxford-us.mp3'},
+    {id:54,word:'according',phonetic:'英 /əˈkɔːdɪŋ/ · 美 /əˈkɔːrdɪŋ/',meaning:'根据；按照；与……一致（主要用于 according to）',parts:[['accord','一致、符合'],['-ing','分词后缀']],origin:'accord 表示一致，according to 即“与某来源所说的一致”。',mnemonic:'内容与某个来源 accord（一致），就是 according to that source。',collocations:[['according to','根据；按照'],['according to the report','根据报告'],['according to plan','按照计划']],note:'考研重点是 according to；不能用 according to me 表示“我认为”，应说 in my opinion。按钮播放完整短语 according to。',exampleEn:'According to the report, demand is increasing.',exampleZh:'根据报告，需求正在增加。',storyEn:'According to the abstract, access to data remains unequal.',storyZh:'根据摘要，数据获取仍然不平等。',audioGb:'audio/according-oxford-gb.mp3',audioUs:'audio/according-oxford-us.mp3',audioLabelGb:'词典短语 · 英',audioLabelUs:'词典短语 · 美'},
+    {id:55,word:'abdomen',phonetic:'英 /ˈæbdəmən/ · 美 /ˈæbdəmən/',meaning:'腹部；腹腔；（昆虫的）腹部',parts:[['abdomen','拉丁整体词源']],origin:'直接来自拉丁语 abdomen，不适合按现代 ab- 前缀拆解。',mnemonic:'把 abdomen 作为完整的医学位置词记忆：胸部以下、骨盆以上的腹部。',collocations:[['lower abdomen','下腹部'],['abdominal pain','腹痛'],['abdomen muscles','腹部肌肉']],note:'形容词是 abdominal /æbˈdɒmɪnl/，重音位置与名词不同。',exampleEn:'The patient complained of pain in the lower abdomen.',exampleZh:'患者诉说下腹部疼痛。',storyEn:'An abnormal pain arose in his lower abdomen.',storyZh:'他的下腹部出现了异常疼痛。',audioGb:'audio/abdomen-oxford-gb.mp3',audioUs:'audio/abdomen-oxford-us.mp3'},
+    {id:56,word:'abolish',phonetic:'英 /əˈbɒlɪʃ/ · 美 /əˈbɑːlɪʃ/',meaning:'废除；取消；消灭',parts:[['abolish','整体词源：使消失']],origin:'来自拉丁语 abolere（摧毁、使消失），不建议简单按 ab- 拆分。',mnemonic:'让一项制度彻底消失，就是 abolish。',collocations:[['abolish a law','废除法律'],['abolish slavery','废除奴隶制'],['abolish a system','废除制度']],note:'abolish 常指彻底结束制度或做法；abrogate 更正式，常指废止法律、条约或权利。',exampleEn:'The government promised to abolish the outdated system.',exampleZh:'政府承诺废除这项过时制度。',storyEn:'The committee amended one law and abolished another.',storyZh:'委员会修订了一项法律，并废除了另一项。',audioGb:'audio/abolish-oxford-gb.mp3',audioUs:'audio/abolish-oxford-us.mp3'},
+    {id:57,word:'abound',phonetic:'英 /əˈbaʊnd/ · 美 /əˈbaʊnd/',meaning:'大量存在；充满；富于',parts:[['ab-','向外、溢出'],['und','波浪、水']],origin:'来自拉丁语 abundare（像水一样溢出），表示数量非常多。',mnemonic:'像水波一样多到溢出，就是 abound。',collocations:[['abound in','富含……'],['abound with','充满……'],['examples abound','例子比比皆是']],note:'abound 是不及物动词；常见搭配 abound in/with。形容词 abundant。',exampleEn:'The forest abounds with wildlife.',exampleZh:'这片森林里野生动物众多。',storyEn:'Opportunities abound when access to knowledge improves.',storyZh:'当知识获取得到改善时，机会大量涌现。',audioGb:'audio/abound-oxford-gb.mp3',audioUs:'audio/abound-oxford-us.mp3'},
+    {id:58,word:'abbreviate',phonetic:'英 /əˈbriːvieɪt/ · 美 /əˈbriːvieɪt/',meaning:'缩写；缩短',parts:[['ab-','加强、变化'],['brevi','短'],['-ate','动词后缀']],origin:'核心词根 brev 表示“短”，把词或表达变短就是 abbreviate。',mnemonic:'brev 是 brief（简短）的亲戚，abbreviate 就是缩短。',collocations:[['abbreviate a word','缩写单词'],['be abbreviated to','缩写为'],['abbreviate something as','把……缩写成']],note:'名词 abbreviation；常见结构 be abbreviated as/to。',exampleEn:'The word laboratory is often abbreviated to lab.',exampleZh:'laboratory 一词经常缩写为 lab。',storyEn:'The editor abbreviated the abstruse title to improve access.',storyZh:'编辑缩短了晦涩的标题，方便读者理解。',audioGb:'audio/abbreviate-oxford-gb.mp3',audioUs:'audio/abbreviate-oxford-us.mp3'},
+    {id:59,word:'absolute',phonetic:'英 /ˈæbsəluːt/ · 美 /ˈæbsəluːt/',meaning:'绝对的；完全的；确实的；绝对事物',parts:[['ab-','离开'],['solut','松开、释放']],origin:'词源原意是不受限制、独立存在，发展为“绝对的、完全的”。',mnemonic:'不被任何条件绑住，就是 absolute：绝对的。',collocations:[['absolute certainty','绝对确定'],['absolute power','绝对权力'],['an absolute necessity','绝对必要'],['in absolute terms','按绝对值计算']],note:'考研熟词僻义：absolute 可强调“十足的、完全的”，如 an absolute disaster。',exampleEn:'There is no absolute certainty in scientific research.',exampleZh:'科学研究中不存在绝对的确定性。',storyEn:'Absolute power can aggravate abuse and social asymmetry.',storyZh:'绝对权力可能加剧权力滥用和社会不平等。',audioGb:'audio/absolute-oxford-gb.mp3',audioUs:''},
+    {id:60,word:'absurd',phonetic:'英 /əbˈsɜːd/ · 美 /əbˈsɜːrd/',meaning:'荒谬的；不合理的；荒诞事物',parts:[['ab-','偏离'],['surd','聋的、无理性的']],origin:'词源含有“不和谐、听起来不合理”的意味，引申为荒谬。',mnemonic:'一个说法听起来完全不合逻辑，就是 absurd。',collocations:[['an absurd idea','荒谬的想法'],['seem absurd','显得荒谬'],['reduce something to the absurd','把某事推向荒谬']],note:'你输入的 `absurb` 末尾拼错，正确拼写是 `absurd`；名词 absurdity。',exampleEn:'It is absurd to ignore such abundant evidence.',exampleZh:'忽视如此大量的证据是荒谬的。',storyEn:'The abstract claim sounded absurd until new evidence arose.',storyZh:'那项抽象主张起初听起来很荒谬，直到新证据出现。',audioGb:'audio/absurd-oxford-gb.mp3',audioUs:''}
+    ];
+    let current = 0;
+    const learned = new Set(JSON.parse(localStorage.getItem('vocab-learned') || '[]'));
+    let masteryFilter = 'unlearned';
+    const collapsedGroups = new Set();
+    const partsOfSpeech = {
+      abject:'形容词（adj.）', domain:'名词（n.）', amoral:'形容词（adj.）', asocial:'形容词（adj.）',
+      atypical:'形容词（adj.）', acentric:'形容词（adj.）', apathy:'名词（n.）', aperiodic:'形容词（adj.）',
+      asexual:'形容词（adj.）', asymmetry:'名词（n.）', afloat:'形容词 / 副词（adj. / adv.）', ahead:'副词 / 介词 / 形容词（adv. / prep. / adj.）',
+      alive:'形容词（adj.）', aside:'副词 / 介词 / 名词（adv. / prep. / n.）', ashore:'副词（adv.）', akin:'形容词（adj.）',
+      alight:'动词 / 形容词（v. / adj.）', amend:'动词（v.）', arise:'动词（v.）', awake:'动词 / 形容词（v. / adj.）',
+      abase:'动词（v.）', afresh:'副词（adv.）', amass:'动词（v.）', abnormal:'形容词（adj.）', abrupt:'形容词（adj.）',
+      absent:'形容词 / 动词（adj. / v.）', absorb:'动词（v.）', abstract:'形容词 / 名词 / 动词（adj. / n. / v.）', abuse:'名词 / 动词（n. / v.）',
+      abduct:'动词（v.）', abstain:'动词（v.）', abdicate:'动词（v.）', abjure:'动词（v.）', abrade:'动词（v.）',
+      abrogate:'动词（v.）', abscise:'动词（v.）', abstinence:'名词（n.）', abstruse:'形容词（adj.）', accelerate:'动词（v.）',
+      accompany:'动词（v.）', accumulate:'动词（v.）', affirm:'动词（v.）', aggravate:'动词（v.）', appease:'动词（v.）',
+      applause:'名词（n.）', appoint:'动词（v.）', appreciate:'动词（v.）', abandon:'动词 / 名词（v. / n.）', abide:'动词（v.）',
+      abroad:'副词（adv.）', abundant:'形容词（adj.）', access:'名词 / 动词（n. / v.）', accomplish:'动词（v.）',
+      according:'介词短语组成部分（according to）', abdomen:'名词（n.）', abolish:'动词（v.）', abound:'动词（v.）',
+      abbreviate:'动词（v.）', absolute:'形容词 / 名词（adj. / n.）', absurd:'形容词 / 名词（adj. / n.）'
+    };
+    const prefixGroups = [
+      {id:'negative-a', title:'否定 a-（无、不）', words:['amoral','asocial','atypical','acentric','apathy','aperiodic','asexual','asymmetry']},
+      {id:'state-a', title:'状态 / 方位 a-', words:['arise','awake','afresh','amass','afloat','ahead','alive','aside','ashore','alight']},
+      {id:'ab-abs', title:'ab- / abs-（离开、去除）', words:['abject','abase','abnormal','abrupt','absent','absorb','abstract','abuse','abduct','abstain','abdicate','abjure','abrade','abrogate','abscise','abstinence','abstruse','abandon','abide','abroad','abundant','abdomen','abolish','abound','abbreviate','absolute','absurd']},
+      {id:'assimilated', title:'同化前缀 ac- / af- / ag- / ap-', words:['accelerate','accompany','accumulate','affirm','aggravate','appease','applause','appoint','appreciate','access','accomplish','according']},
+      {id:'whole-word', title:'整体词源 / 其他', words:['domain','akin','amend']}
+    ];
+    const el = id => document.getElementById(id);
+    function renderList(filter='') {
+      const q=filter.trim().toLowerCase();
+      const visible=words.filter(w=>(masteryFilter==='learned'?learned.has(w.id):!learned.has(w.id))&&(w.word.includes(q)||w.meaning.includes(filter)));
+      const html=prefixGroups.map(group=>{
+        const items=group.words.map(name=>visible.find(w=>w.word===name)).filter(Boolean);
+        if(!items.length)return '';
+        const buttons=items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.id).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');
+        return `<details class="word-group" data-group="${group.id}" ${collapsedGroups.has(group.id)?'':'open'}><summary><span class="group-title">${group.title}</span><span class="group-count">${items.length}</span></summary><div class="group-items">${buttons}</div></details>`;
+      }).join('');
+      el('wordList').innerHTML=html||'<div class="empty-list">当前分类暂无单词</div>';
+      document.querySelectorAll('.word-group').forEach(d=>d.ontoggle=()=>{d.open?collapsedGroups.delete(d.dataset.group):collapsedGroups.add(d.dataset.group);});
+      document.querySelectorAll('.word-item').forEach(b=>b.onclick=()=>{current=words.findIndex(w=>w.id===+b.dataset.id);render();playAudio(words[current].audioGb||words[current].audioUs);window.scrollTo({top:0,behavior:'smooth'});});
+      el('total').textContent=`${words.length} 个单词`;
+      el('progress').textContent=`已掌握 ${learned.size}`;
+      el('showUnlearned').classList.toggle('active',masteryFilter==='unlearned');
+      el('showLearned').classList.toggle('active',masteryFilter==='learned');
+    }
+    function render(){
+      const w=words[current]; el('index').textContent=`Word ${String(w.id).padStart(3,'0')}`; el('word').textContent=w.word; el('phonetic').textContent=w.phonetic; el('meaning').textContent=w.meaning;
+      el('formula').innerHTML=w.parts.map((p,i)=>`${i?'<span class="plus">+</span>':''}<span class="part">${p[0]} · ${p[1]}</span>`).join('');
+      ['origin','mnemonic','note','exampleEn','exampleZh','storyEn','storyZh'].forEach(k=>el(k).textContent=w[k]);
+      el('collocations').innerHTML=w.collocations.map(p=>`<div class="pair"><strong>${p[0]}</strong><span class="cn">${p[1]}</span></div>`).join('');
+      el('mastered').textContent=learned.has(w.id)?'已掌握 ✓':'标记掌握'; el('pos').textContent=partsOfSpeech[w.word]||'词性待补充'; renderList(el('search').value);
+      el('recordingGb').textContent=w.audioLabelGb||'词典 · 英式'; el('recordingGb').style.display=w.audioGb?'':'none';
+      el('recordingUs').textContent=w.audioLabelUs||'词典 · 美式'; el('recordingUs').style.display=w.audioUs?'':'none';
+      el('prev').disabled=current===0; el('next').disabled=current===words.length-1;
+    }
+    el('search').oninput=e=>renderList(e.target.value);
+    el('showUnlearned').onclick=()=>{masteryFilter='unlearned';renderList(el('search').value);};
+    el('showLearned').onclick=()=>{masteryFilter='learned';renderList(el('search').value);};
+    el('toggleCn').onclick=()=>{el('card').classList.toggle('hidden-cn');el('toggleCn').textContent=el('card').classList.contains('hidden-cn')?'显示中文':'隐藏中文';};
+    el('mastered').onclick=()=>{const id=words[current].id;learned.has(id)?learned.delete(id):learned.add(id);localStorage.setItem('vocab-learned',JSON.stringify([...learned]));render();};
+    el('prev').onclick=()=>{if(current>0){current--;render();window.scrollTo({top:0,behavior:'smooth'});}}; el('next').onclick=()=>{if(current<words.length-1){current++;render();window.scrollTo({top:0,behavior:'smooth'});}};
+    function playAudio(src){
+      const a=el('audio'); a.pause(); a.src=src; a.currentTime=0;
+      a.play().catch(()=>alert('音频未能播放，请刷新页面后重试。'));
+    }
+    el('recordingGb').onclick=()=>playAudio(words[current].audioGb);
+    el('recordingUs').onclick=()=>playAudio(words[current].audioUs);
+    el('word').onclick=()=>playAudio(words[current].audioGb||words[current].audioUs);
+    el('word').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();playAudio(words[current].audioGb||words[current].audioUs);}};
+    el('listenExample').onclick=()=>playAudio(words[current].audioExample);
+    el('listenStory').onclick=()=>playAudio(words[current].audioStory);
+    render();
+  </script>
+</body>
+</html>
