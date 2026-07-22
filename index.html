@@ -77,12 +77,12 @@
       .mobile-word-picker { display:block; width:100%; height:40px; margin-top:8px; border:1px solid #cbd8d1; border-radius:5px; padding:0 10px; color:var(--ink); background:white; }
       .word-list { display:none; }
       main { min-height:calc(100vh - 126px); padding:10px 10px 18px; background:linear-gradient(160deg,#dce8e1 0%,#eef3ef 42%,#d3e2da 100%); }
-      .topbar { max-width:540px; align-items:center; gap:8px; }
+      .topbar { position:sticky; top:0; z-index:5; max-width:540px; align-items:center; gap:8px; padding:6px 0; background:rgba(238,243,239,.96); }
       .eyebrow { font-size:11px; letter-spacing:.08em; }
       .actions { flex:1; flex-wrap:wrap; justify-content:flex-end; gap:5px; }
       .action-btn { min-height:34px; padding:6px 9px; font-size:12px; }
       #recordingGb,#recordingUs,#toggleCn { padding-left:8px; padding-right:8px; }
-      article { max-width:540px; min-height:calc(100vh - 190px); margin:8px auto 0; padding:17px 14px 15px; border:1px solid #c6d5cc; border-radius:5px; background:#fffef9; box-shadow:0 7px 18px rgba(32,60,45,.12), 0 2px 0 rgba(255,255,255,.9) inset; position:relative; }
+      article { scroll-margin-top:58px; max-width:540px; min-height:calc(100vh - 190px); margin:8px auto 0; padding:17px 14px 15px; border:1px solid #c6d5cc; border-radius:5px; background:#fffef9; box-shadow:0 7px 18px rgba(32,60,45,.12), 0 2px 0 rgba(255,255,255,.9) inset; position:relative; }
       article::before { content:''; position:absolute; left:0; right:0; top:0; height:6px; background:#176b52; border-radius:5px 5px 0 0; }
       h1 { font-size:clamp(40px,13vw,56px); margin-top:6px; }
       .phonetic { font-size:12px; line-height:1.4; margin:6px 0 11px; }
@@ -417,7 +417,7 @@
     el('showLearned').onclick=()=>{masteryFilter='learned';renderList(el('search').value);};
     el('toggleCn').onclick=()=>{el('card').classList.toggle('hidden-cn');el('toggleCn').textContent=el('card').classList.contains('hidden-cn')?'显示中文':'隐藏中文';};
     el('mastered').onclick=()=>{const id=words[current].id;learned.has(id)?learned.delete(id):learned.add(id);localStorage.setItem('vocab-learned',JSON.stringify([...learned]));render();};
-    el('prev').onclick=()=>{if(current>0){current--;render();scrollToCurrentCard();}}; el('next').onclick=()=>{if(current<words.length-1){current++;render();scrollToCurrentCard();}};
+    el('prev').onclick=()=>{if(current>0){current--;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}}; el('next').onclick=()=>{if(current<words.length-1){current++;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}};
     function playAudio(src){
       const a=el('audio'); a.pause(); a.src=src; a.currentTime=0;
       a.play().catch(()=>alert('音频未能播放，请刷新页面后重试。'));
