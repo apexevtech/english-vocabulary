@@ -195,6 +195,7 @@
   <script src="quality-batch-006.js"></script>
   <script src="quality-batch-007.js"></script>
   <script src="quality-batch-008.js"></script>
+  <script src="refined-phonetics.js"></script>
   <script>
     const detailedWords = [{
       id:1, word:'abject', phonetic:'英 /ˈæbdʒekt/  ·  美 /ˈæbdʒekt/  ·  重音在第一音节', meaning:'极其悲惨的；卑躬屈膝的；卑劣的',
@@ -388,6 +389,7 @@
     words.forEach(word=>{if(word.reviewStatus==='已精修'&&word.id>=400&&word.id<700){[word.storyEn,word.storyZh]=refinedStory(word);}});
     words.forEach((word,index)=>{
       word.displayNo=index+1;
+      if(word.reviewStatus==='已精修'&&window.refinedPhonetics[word.word])word.phonetic=window.refinedPhonetics[word.word];
       if(word.reviewStatus==='已精修'&&!word.phonetic)word.phonetic=automatedByWord.get(word.word)?.phonetic||'';
       if(word.id<2000) return;
       word.reviewStatus='待人工精修';
