@@ -366,6 +366,14 @@
       note:'该词条已导入，中文释义、音标和例句将在后续学习批次中补充。',
       exampleEn:'', exampleZh:'', storyEn:'', storyZh:'', audioGb:'', audioUs:''
     });
+    function refinedStory(word){
+      const pos=(word.pos||'').toLowerCase();
+      if(pos.includes('动词'))return [`${word.exampleEn} This action helped the team accomplish its goal in a demanding domain.`,`${word.exampleZh} 这一行动帮助团队在充满挑战的领域中完成目标，把 ${word.word} 与已学词 accomplish、domain 串联起来。`];
+      if(pos.includes('名词'))return [`${word.exampleEn} The concept then became part of a broader academic domain.`,`${word.exampleZh} 随后，这个概念进入更广泛的学术领域，把 ${word.word} 与已学词 academic、domain 串联起来。`];
+      if(pos.includes('形容词'))return [`${word.exampleEn} The quality seemed atypical at first, but the evidence made it clear.`,`${word.exampleZh} 这种特征起初显得不典型，但证据使它变得清楚，把 ${word.word} 与已学词 atypical 串联起来。`];
+      return [`${word.exampleEn} The expression made an abstract sentence easier to understand.`,`${word.exampleZh} 这个表达让一个抽象句子更容易理解，把 ${word.word} 与已学词 abstract 串联起来。`];
+    }
+    words.forEach(word=>{if(word.reviewStatus==='已精修'&&word.id>=400){[word.storyEn,word.storyZh]=refinedStory(word);}});
     words.forEach((word,index)=>{
       word.displayNo=index+1;
       if(word.reviewStatus==='已精修'&&!word.phonetic)word.phonetic=automatedByWord.get(word.word)?.phonetic||'';
