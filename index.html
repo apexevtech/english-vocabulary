@@ -181,6 +181,7 @@
   <script src="batch-002.js"></script>
   <script src="batch-003.js"></script>
   <script src="batch-remaining.js"></script>
+  <script src="quality-batch-004.js"></script>
   <script>
     const detailedWords = [{
       id:1, word:'abject', phonetic:'英 /ˈæbdʒekt/  ·  美 /ˈæbdʒekt/  ·  重音在第一音节', meaning:'极其悲惨的；卑躬屈膝的；卑劣的',
@@ -354,7 +355,9 @@
     {id:59,word:'absolute',phonetic:'英 /ˈæbsəluːt/ · 美 /ˈæbsəluːt/',meaning:'绝对的；完全的；确实的；绝对事物',parts:[['ab-','离开'],['solut','松开、释放']],origin:'词源原意是不受限制、独立存在，发展为“绝对的、完全的”。',mnemonic:'不被任何条件绑住，就是 absolute：绝对的。',collocations:[['absolute certainty','绝对确定'],['absolute power','绝对权力'],['an absolute necessity','绝对必要'],['in absolute terms','按绝对值计算']],note:'考研熟词僻义：absolute 可强调“十足的、完全的”，如 an absolute disaster。',exampleEn:'There is no absolute certainty in scientific research.',exampleZh:'科学研究中不存在绝对的确定性。',storyEn:'Absolute power can aggravate abuse and social asymmetry.',storyZh:'绝对权力可能加剧权力滥用和社会不平等。',audioGb:'audio/absolute-oxford-gb.mp3',audioUs:''},
     {id:60,word:'absurd',phonetic:'英 /əbˈsɜːd/ · 美 /əbˈsɜːrd/',meaning:'荒谬的；不合理的；荒诞事物',parts:[['ab-','偏离'],['surd','聋的、无理性的']],origin:'词源含有“不和谐、听起来不合理”的意味，引申为荒谬。',mnemonic:'一个说法听起来完全不合逻辑，就是 absurd。',collocations:[['an absurd idea','荒谬的想法'],['seem absurd','显得荒谬'],['reduce something to the absurd','把某事推向荒谬']],note:'你输入的 `absurb` 末尾拼错，正确拼写是 `absurd`；名词 absurdity。',exampleEn:'It is absurd to ignore such abundant evidence.',exampleZh:'忽视如此大量的证据是荒谬的。',storyEn:'The abstract claim sounded absurd until new evidence arose.',storyZh:'那项抽象主张起初听起来很荒谬，直到新证据出现。',audioGb:'audio/absurd-oxford-gb.mp3',audioUs:''}
     ];
-    const detailedByWord = new Map([...window.batchEntries.map(w=>[w.word,w]), ...window.batchEntries002.map(w=>[w.word,w]), ...window.batchEntries003.map(w=>[w.word,w]), ...window.batchRemainingEntries.map(w=>[w.word,w]), ...detailedWords.map(w=>[w.word,w])]);
+    const automatedEntries=[...window.batchEntries,...window.batchEntries002,...window.batchEntries003,...window.batchRemainingEntries];
+    const automatedByWord=new Map(automatedEntries.map(w=>[w.word,w]));
+    const detailedByWord = new Map([...automatedEntries.map(w=>[w.word,w]), ...window.qualityBatch004.map(w=>[w.word,w]), ...detailedWords.map(w=>[w.word,w])]);
     let nextImportedId = 1000;
     const words = window.vocabularyList.map(word=>detailedByWord.get(word)||{
       id:nextImportedId++, word, phonetic:'', meaning:'释义待补充',
@@ -364,6 +367,7 @@
     });
     words.forEach((word,index)=>{
       word.displayNo=index+1;
+      if(word.reviewStatus==='已精修'&&!word.phonetic)word.phonetic=automatedByWord.get(word.word)?.phonetic||'';
       if(word.id<2000) return;
       word.reviewStatus='待人工精修';
       word.parts=[[word.word,'整体记忆（待精修）']];
