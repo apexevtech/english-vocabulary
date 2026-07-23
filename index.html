@@ -422,8 +422,8 @@
       ['origin','mnemonic','note','exampleEn','exampleZh','storyEn','storyZh'].forEach(k=>el(k).textContent=w[k]);
       el('collocations').innerHTML=w.collocations.map(p=>`<div class="pair"><strong>${p[0]}</strong><span class="cn">${p[1]}</span></div>`).join('');
       el('mastered').textContent=learned.has(w.id)?'已掌握 ✓':'标记掌握'; el('pos').textContent=partsOfSpeech[w.word]||'词性待补充'; renderList(el('search').value);
-      el('recordingGb').textContent=w.audioLabelGb||'词典 · 英式'; el('recordingGb').style.display=w.audioGb?'':'none';
-      el('recordingUs').textContent=w.audioLabelUs||'词典 · 美式'; el('recordingUs').style.display=w.audioUs?'':'none';
+      el('recordingGb').textContent=w.audioLabelGb||(w.audioGb?'词典 · 英式':'在线词典 · 英式'); el('recordingGb').style.display=w.word?'':'none';
+      el('recordingUs').textContent=w.audioLabelUs||(w.audioUs?'词典 · 美式':'在线词典 · 美式'); el('recordingUs').style.display=w.word?'':'none';
       el('prev').disabled=current===0; el('next').disabled=current===words.length-1;
     }
     el('search').oninput=e=>renderList(e.target.value);
@@ -433,9 +433,22 @@
     el('toggleCn').onclick=()=>{el('card').classList.toggle('hidden-cn');el('toggleCn').textContent=el('card').classList.contains('hidden-cn')?'显示中文':'隐藏中文';};
     el('mastered').onclick=()=>{const id=words[current].id;learned.has(id)?learned.delete(id):learned.add(id);localStorage.setItem('vocab-learned',JSON.stringify([...learned]));render();};
     el('prev').onclick=()=>{if(current>0){current--;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}}; el('next').onclick=()=>{if(current<words.length-1){current++;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}};
-    function playAudio(src){
-      const a=el('audio'); a.pause(); a.src=src; a.currentTime=0;
-      a.play().catch(()=>alert('音频未能播放，请刷新页面后重试。'));
+    async function playAudio(src){
+      const a=el('audio'); a.pause();
+      if(!src){
+        try{
+          const response=await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(words[current].word)}`);
+          if(!response.ok) throw new Error('dictionary lookup failed');
+          const entries=await response.json();
+          src=entries.flatMap(entry=>entry.phonetics||[]).map(item=>item.audio).find(Boolean)||'';
+        }catch(error){
+          alert('该词暂时没有可用的词典音频，请稍后重试。');
+          return;
+        }
+      }
+      if(!src){ alert('该词暂时没有可用的词典音频。'); return; }
+      a.src=src; a.currentTime=0;
+      a.play().catch(()=>alert('音频播放失败，请检查网络连接后重试。'));
     }
     el('recordingGb').onclick=()=>playAudio(words[current].audioGb);
     el('recordingUs').onclick=()=>playAudio(words[current].audioUs);
