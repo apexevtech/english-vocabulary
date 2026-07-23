@@ -431,6 +431,21 @@
       'al-':'ad- 同化为 al-', 'an-':'ad- 同化为 an-', 'ap-':'ad- 同化为 ap-',
       'ar-':'ad- 同化为 ar-', 'as-':'ad- 同化为 as-', 'at-':'ad- 同化为 at-'
     };
+    const suffixTitles={
+      '-tion':'-tion / -sion / -ation 行为、状态或结果', '-sion':'-tion / -sion / -ation 行为、状态或结果', '-ion':'-tion / -sion / -ation 行为、状态或结果', '-ation':'-tion / -sion / -ation 行为、状态或结果',
+      '-ment':'-ment 行为、结果或事物', '-al':'-al 相关的 / 行为结果',
+      '-ity':'-ity / -ty / -iety 性质或状态', '-ty':'-ity / -ty / -iety 性质或状态', '-iety':'-ity / -ty / -iety 性质或状态',
+      '-ance':'-ance / -ence 状态或结果', '-ence':'-ance / -ence 状态或结果',
+      '-able':'-able / -ible 可……的', '-ible':'-able / -ible 可……的',
+      '-ous':'-ous / -ious 充满……的', '-ious':'-ous / -ious 充满……的', '-ive':'-ive 有……性质的',
+      '-ful':'-ful 充满……的', '-less':'-less 无……的',
+      '-er':'-er / -or 人或工具', '-or':'-er / -or 人或工具',
+      '-ist':'-ist 从事者', '-ism':'-ism 主义或体系', '-ize':'-ize 使成……',
+      '-ant':'-ant / -ent 人或具有某性质', '-ent':'-ant / -ent 人或具有某性质',
+      '-ary':'-ary 与……相关的', '-ic':'-ic / -etic 与……相关的', '-etic':'-ic / -etic 与……相关的',
+      '-ate':'-ate 使成…… / 做……', '-ish':'-ish 具有……特征', '-some':'-some 引起……的',
+      '-ward':'-ward 朝向……', '-ly':'-ly 以……方式', '-age':'-age 集合、状态或结果'
+    };
     function morphologyGroup(word){
       if(word.reviewStatus!=='已精修')return {key:`pending-${word.word[0]}`,title:`${word.word[0].toUpperCase()} 开头（待精修）`};
       const firstPart=(word.parts?.[0]?.[0]||'').toLowerCase();
@@ -441,6 +456,9 @@
       if(firstPart==='apo-')return {key:'prefix-apo',title:'apo- 离开 / 解除'};
       if(firstPart==='auto-')return {key:'prefix-auto',title:'auto- 自己 / 自动'};
       if(firstPart.endsWith('-'))return {key:`prefix-${firstPart}`,title:`${firstPart} 前缀`};
+      const suffixParts=(word.parts||[]).map(part=>(part[0]||'').toLowerCase()).filter(part=>part.startsWith('-'));
+      const suffix=suffixParts[suffixParts.length-1];
+      if(suffixTitles[suffix])return {key:`suffix-${suffixTitles[suffix].split(' ')[0]}`,title:suffixTitles[suffix]};
       const isCompound=word.parts?.length>1&&word.parts.every(part=>!part[0].startsWith('-')&&!part[0].endsWith('-'));
       if(isCompound)return {key:'refined-compound',title:'复合词 / 词基组合（已精修）'};
       return {key:'refined-root-whole',title:'词根联想 / 整体词（已精修）'};
