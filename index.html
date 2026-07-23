@@ -118,6 +118,7 @@
       <div class="sub">理解构词 · 串联场景 · 反复朗读</div>
       <input id="search" class="search" type="search" placeholder="搜索单词或中文" aria-label="搜索单词">
       <div class="status-filter" aria-label="掌握状态筛选">
+        <button id="showAllMastery">全部</button>
         <button id="showUnlearned" class="active">未掌握</button>
         <button id="showLearned">已掌握</button>
       </div>
@@ -433,7 +434,7 @@
     function renderList(filter='') {
       const q=filter.trim().toLowerCase();
       const visible=words.filter(w=>{
-        const masteryMatches=masteryFilter==='learned'?learned.has(w.id):!learned.has(w.id);
+        const masteryMatches=masteryFilter==='all'||(masteryFilter==='learned'?learned.has(w.id):!learned.has(w.id));
         const qualityMatches=qualityFilter==='all'||(qualityFilter==='refined'?(w.reviewStatus||'已精修')==='已精修':w.reviewStatus==='待人工精修');
         return masteryMatches&&qualityMatches&&(w.word.includes(q)||w.meaning.includes(filter));
       });
@@ -458,6 +459,7 @@
       document.querySelectorAll('.word-item').forEach(b=>b.onclick=()=>{current=words.findIndex(w=>w.id===+b.dataset.id);render();playAudio(words[current].audioGb||words[current].audioUs);scrollToCurrentCard();});
       el('total').textContent=`${words.length} 个单词`;
       el('progress').textContent=`已掌握 ${learned.size}`;
+      el('showAllMastery').classList.toggle('active',masteryFilter==='all');
       el('showUnlearned').classList.toggle('active',masteryFilter==='unlearned');
       el('showLearned').classList.toggle('active',masteryFilter==='learned');
       el('showAllQuality').classList.toggle('active',qualityFilter==='all');
@@ -476,11 +478,12 @@
     }
     el('search').oninput=e=>renderList(e.target.value);
     el('mobileWordPicker').onchange=e=>{current=words.findIndex(w=>w.id===+e.target.value);render();playAudio(words[current].audioGb||words[current].audioUs);scrollToCurrentCard();};
+    el('showAllMastery').onclick=()=>{masteryFilter='all';renderList(el('search').value);};
     el('showUnlearned').onclick=()=>{masteryFilter='unlearned';renderList(el('search').value);};
     el('showLearned').onclick=()=>{masteryFilter='learned';renderList(el('search').value);};
     el('showAllQuality').onclick=()=>{qualityFilter='all';renderList(el('search').value);};
-    el('showRefined').onclick=()=>{qualityFilter='refined';renderList(el('search').value);};
-    el('showPending').onclick=()=>{qualityFilter='pending';renderList(el('search').value);};
+    el('showRefined').onclick=()=>{masteryFilter='all';qualityFilter='refined';renderList(el('search').value);};
+    el('showPending').onclick=()=>{masteryFilter='all';qualityFilter='pending';renderList(el('search').value);};
     el('toggleCn').onclick=()=>{el('card').classList.toggle('hidden-cn');el('toggleCn').textContent=el('card').classList.contains('hidden-cn')?'显示中文':'隐藏中文';};
     el('mastered').onclick=()=>{const id=words[current].id;learned.has(id)?learned.delete(id):learned.add(id);localStorage.setItem('vocab-learned',JSON.stringify([...learned]));render();};
     el('prev').onclick=()=>{if(current>0){current--;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}}; el('next').onclick=()=>{if(current<words.length-1){current++;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}};
