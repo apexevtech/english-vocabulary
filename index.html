@@ -359,6 +359,33 @@
       note:'该词条已导入，中文释义、音标和例句将在后续学习批次中补充。',
       exampleEn:'', exampleZh:'', storyEn:'', storyZh:'', audioGb:'', audioUs:''
     });
+    const memoryPrefixes = [
+      ['anti','反、对抗'],['auto','自己、自动'],['circum','周围'],['counter','相反、对抗'],['inter','在...之间'],['intro','向内'],['micro','微小'],['multi','许多'],['non','不、无'],['over','过度、在上方'],['pre','在前、预先'],['pro','向前、支持'],['re','再次、向后'],['semi','一半'],['sub','在下、次级'],['super','超过、在上'],['trans','跨越、转移'],['under','在下、不足'],['un','不、相反'],['dis','分开、否定'],['de','向下、去除'],['ex','向外、前任'],['im','向内、不'],['in','向内、不'],['con','共同、一起'],['com','共同、一起'],['ad','向、加强'],['ab','离开、偏离']
+    ];
+    const memorySuffixes = [['ization','过程、结果'],['ation','行为、结果'],['ition','行为、结果'],['sion','行为、状态'],['tion','行为、结果'],['ment','行为、结果'],['ness','状态'],['ity','性质、状态'],['able','能够...的'],['ible','能够...的'],['ful','充满...的'],['less','没有...的'],['ous','充满...的'],['ive','具有...性质的'],['al','...的'],['er','人、物'],['or','人、物'],['ly','以...方式']];
+    function memorySplit(word){
+      const prefix=memoryPrefixes.find(([value])=>word.startsWith(value)&&word.length>value.length+2);
+      const suffix=memorySuffixes.find(([value])=>word.endsWith(value)&&word.length>value.length+2);
+      let core=word;
+      if(prefix) core=core.slice(prefix[0].length);
+      if(suffix) core=core.slice(0,-suffix[0].length);
+      const parts=[];
+      if(prefix) parts.push([`${prefix[0]}-`,prefix[1]]);
+      parts.push([core||word,prefix||suffix?'词义核心':'整体记忆']);
+      if(suffix) parts.push([`-${suffix[0]}`,suffix[1]]);
+      return {prefix,suffix,core,parts};
+    }
+    words.forEach((word,index)=>{
+      if(word.id<2000) return;
+      const split=memorySplit(word.word);
+      const previous=words[Math.max(0,index-1)].word;
+      const next=words[Math.min(words.length-1,index+1)].word;
+      word.parts=split.parts;
+      word.origin=`这是用于记忆的构词拆分：${split.prefix?`${split.prefix[0]}- 表示“${split.prefix[1]}”；`:''}${split.core} 是词义核心${split.suffix?`；-${split.suffix[0]} 提示“${split.suffix[1]}”`:''}。对基础词或整体借词，不把该拆分当作严格词源。`;
+      word.mnemonic=split.prefix?`先抓住 ${split.prefix[0]}-（${split.prefix[1]}），再把 ${split.core} 与“${word.meaning}”连起来记。`:`把 ${word.word} 当作整体词记忆：读音、中文核心义“${word.meaning}”和例句一起固定。`;
+      word.storyEn=`In this word chain, remember ${previous}, then ${word.word}, and finally ${next}.`;
+      word.storyZh=`把相邻三个词串成画面：先想到 ${previous}，再遇到 ${word.word}（${word.meaning}），最后过渡到 ${next}。`;
+    });
     let current = 0;
     const learned = new Set(JSON.parse(localStorage.getItem('vocab-learned') || '[]'));
     let masteryFilter = 'unlearned';
@@ -406,8 +433,9 @@
       }).join('') + (()=>{
         const items=visible.filter(w=>!groupedNames.has(w.word));
         if(!items.length)return '';
-        const buttons=items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.id).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');
-        return `<details class="word-group" data-group="imported" ${collapsedGroups.has('imported')?'':'open'}><summary><span class="group-title">完整导入词表</span><span class="group-count">${items.length}</span></summary><div class="group-items">${buttons}</div></details>`;
+        const buckets=new Map();
+        items.forEach(w=>{const prefix=memorySplit(w.word).prefix;const key=prefix?prefix[0]:'whole';if(!buckets.has(key))buckets.set(key,{title:prefix?`${prefix[0]}-（${prefix[1]}）`:'整体词记忆',items:[]});buckets.get(key).items.push(w);});
+        return [...buckets.entries()].map(([key,bucket])=>{const groupId=`auto-${key}`;const buttons=bucket.items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.id).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');return `<details class="word-group" data-group="${groupId}" ${collapsedGroups.has(groupId)?'':'open'}><summary><span class="group-title">${bucket.title}</span><span class="group-count">${bucket.items.length}</span></summary><div class="group-items">${buttons}</div></details>`;}).join('');
       })();
       el('wordList').innerHTML=html||'<div class="empty-list">当前分类暂无单词</div>';
       const picker=el('mobileWordPicker');
