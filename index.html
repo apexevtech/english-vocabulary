@@ -48,6 +48,7 @@
     h1:focus-visible { outline:2px solid var(--green); outline-offset:5px; border-radius:3px; }
     .phonetic { color:var(--muted); font-size:19px; margin:12px 0 28px; }
     .pos { display:inline-block; margin-top:-18px; margin-bottom:22px; padding:5px 9px; border:1px solid #cbd8d1; border-radius:4px; color:var(--green); background:var(--green2); font-size:13px; font-weight:750; }
+    .quality { display:inline-block; margin:0 0 22px 7px; padding:5px 9px; border:1px solid #e2c89c; border-radius:4px; color:#8a5613; background:#fff6e6; font-size:12px; font-weight:700; }
     .meaning { font-size:25px; line-height:1.5; font-weight:650; padding:20px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
     .grid { display:grid; grid-template-columns:1fr 1fr; gap:28px 42px; margin-top:30px; }
     section { min-width:0; }
@@ -87,6 +88,7 @@
       h1 { font-size:clamp(40px,13vw,56px); margin-top:6px; }
       .phonetic { font-size:12px; line-height:1.4; margin:6px 0 11px; }
       .pos { margin-top:-6px; margin-bottom:10px; padding:3px 7px; font-size:11px; }
+      .quality { margin:0 0 10px 5px; padding:3px 6px; font-size:10px; }
       .meaning { font-size:17px; line-height:1.4; padding:9px 0; }
       .grid { grid-template-columns:1fr; gap:12px; margin-top:13px; }
       h2 { font-size:12px; margin-bottom:5px; }
@@ -136,6 +138,7 @@
         <h1 id="word" role="button" tabindex="0" title="点击播放发音" aria-label="播放当前单词发音"></h1>
         <div class="phonetic" id="phonetic"></div>
         <div class="pos" id="pos"></div>
+        <div class="quality" id="quality"></div>
         <div class="meaning cn" id="meaning"></div>
         <div class="grid">
           <section>
@@ -359,33 +362,15 @@
       note:'该词条已导入，中文释义、音标和例句将在后续学习批次中补充。',
       exampleEn:'', exampleZh:'', storyEn:'', storyZh:'', audioGb:'', audioUs:''
     });
-    const memoryPrefixes = [
-      ['anti','反、对抗'],['auto','自己、自动'],['circum','周围'],['counter','相反、对抗'],['inter','在...之间'],['intro','向内'],['micro','微小'],['multi','许多'],['non','不、无'],['over','过度、在上方'],['pre','在前、预先'],['pro','向前、支持'],['re','再次、向后'],['semi','一半'],['sub','在下、次级'],['super','超过、在上'],['trans','跨越、转移'],['under','在下、不足'],['un','不、相反'],['dis','分开、否定'],['de','向下、去除'],['ex','向外、前任'],['im','向内、不'],['in','向内、不'],['con','共同、一起'],['com','共同、一起'],['ad','向、加强'],['ab','离开、偏离']
-    ];
-    const memorySuffixes = [['ization','过程、结果'],['ation','行为、结果'],['ition','行为、结果'],['sion','行为、状态'],['tion','行为、结果'],['ment','行为、结果'],['ness','状态'],['ity','性质、状态'],['able','能够...的'],['ible','能够...的'],['ful','充满...的'],['less','没有...的'],['ous','充满...的'],['ive','具有...性质的'],['al','...的'],['er','人、物'],['or','人、物'],['ly','以...方式']];
-    function memorySplit(word){
-      const prefix=memoryPrefixes.find(([value])=>word.startsWith(value)&&word.length>value.length+2);
-      const suffix=memorySuffixes.find(([value])=>word.endsWith(value)&&word.length>value.length+2);
-      let core=word;
-      if(prefix) core=core.slice(prefix[0].length);
-      if(suffix) core=core.slice(0,-suffix[0].length);
-      const parts=[];
-      if(prefix) parts.push([`${prefix[0]}-`,prefix[1]]);
-      parts.push([core||word,prefix||suffix?'词义核心':'整体记忆']);
-      if(suffix) parts.push([`-${suffix[0]}`,suffix[1]]);
-      return {prefix,suffix,core,parts};
-    }
     words.forEach((word,index)=>{
       word.displayNo=index+1;
       if(word.id<2000) return;
-      const split=memorySplit(word.word);
-      const previous=words[Math.max(0,index-1)].word;
-      const next=words[Math.min(words.length-1,index+1)].word;
-      word.parts=split.parts;
-      word.origin=`这是用于记忆的构词拆分：${split.prefix?`${split.prefix[0]}- 表示“${split.prefix[1]}”；`:''}${split.core} 是词义核心${split.suffix?`；-${split.suffix[0]} 提示“${split.suffix[1]}”`:''}。对基础词或整体借词，不把该拆分当作严格词源。`;
-      word.mnemonic=split.prefix?`先抓住 ${split.prefix[0]}-（${split.prefix[1]}），再把 ${split.core} 与“${word.meaning}”连起来记。`:`把 ${word.word} 当作整体词记忆：读音、中文核心义“${word.meaning}”和例句一起固定。`;
-      word.storyEn=`In this word chain, remember ${previous}, then ${word.word}, and finally ${next}.`;
-      word.storyZh=`把相邻三个词串成画面：先想到 ${previous}，再遇到 ${word.word}（${word.meaning}），最后过渡到 ${next}。`;
+      word.reviewStatus='待人工精修';
+      word.parts=[[word.word,'整体记忆（待精修）']];
+      word.origin='该词已进入精修队列。完成词源核验前，不展示未经确认的前缀、词根或后缀。';
+      word.mnemonic=`先用读音、中文核心义“${word.meaning}”和例句记住该词；后续精修会补充可靠的构词联想。`;
+      word.storyEn='';
+      word.storyZh='该词尚未加入人工串联记忆；将在所属 50 词精修批次完成后补充。';
     });
     let current = 0;
     const learned = new Set(JSON.parse(localStorage.getItem('vocab-learned') || '[]'));
@@ -435,7 +420,7 @@
         const items=visible.filter(w=>!groupedNames.has(w.word));
         if(!items.length)return '';
         const buckets=new Map();
-        items.forEach(w=>{const prefix=memorySplit(w.word).prefix;const key=prefix?prefix[0]:'whole';if(!buckets.has(key))buckets.set(key,{title:prefix?`${prefix[0]}-（${prefix[1]}）`:'整体词记忆',items:[]});buckets.get(key).items.push(w);});
+        items.forEach(w=>{const key=w.word[0];if(!buckets.has(key))buckets.set(key,{title:`${key.toUpperCase()} 开头（待精修）`,items:[]});buckets.get(key).items.push(w);});
         return [...buckets.entries()].map(([key,bucket])=>{const groupId=`auto-${key}`;const buttons=bucket.items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.displayNo).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');return `<details class="word-group" data-group="${groupId}" ${collapsedGroups.has(groupId)?'':'open'}><summary><span class="group-title">${bucket.title}</span><span class="group-count">${bucket.items.length}</span></summary><div class="group-items">${buttons}</div></details>`;}).join('');
       })();
       el('wordList').innerHTML=html||'<div class="empty-list">当前分类暂无单词</div>';
@@ -450,7 +435,7 @@
       el('showLearned').classList.toggle('active',masteryFilter==='learned');
     }
     function render(){
-      const w=words[current]; el('index').textContent=`Word ${String(w.displayNo).padStart(3,'0')}`; el('word').textContent=w.word; el('phonetic').textContent=w.phonetic; el('meaning').textContent=w.meaning;
+      const w=words[current]; el('index').textContent=`Word ${String(w.displayNo).padStart(3,'0')}`; el('word').textContent=w.word; el('phonetic').textContent=w.phonetic; el('meaning').textContent=w.meaning; el('quality').textContent=w.reviewStatus||'已精修';
       el('formula').innerHTML=w.parts.map((p,i)=>`${i?'<span class="plus">+</span>':''}<span class="part">${p[0]} · ${p[1]}</span>`).join('');
       ['origin','mnemonic','note','exampleEn','exampleZh','storyEn','storyZh'].forEach(k=>el(k).textContent=w[k]);
       el('collocations').innerHTML=w.collocations.map(p=>`<div class="pair"><strong>${p[0]}</strong><span class="cn">${p[1]}</span></div>`).join('');
