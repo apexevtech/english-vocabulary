@@ -193,6 +193,7 @@
   <script src="quality-batch-004.js"></script>
   <script src="quality-batch-005.js"></script>
   <script src="quality-batch-006.js"></script>
+  <script src="quality-batch-007.js"></script>
   <script>
     const detailedWords = [{
       id:1, word:'abject', phonetic:'英 /ˈæbdʒekt/  ·  美 /ˈæbdʒekt/  ·  重音在第一音节', meaning:'极其悲惨的；卑躬屈膝的；卑劣的',
@@ -368,7 +369,7 @@
     ];
     const automatedEntries=[...window.batchEntries,...window.batchEntries002,...window.batchEntries003,...window.batchRemainingEntries];
     const automatedByWord=new Map(automatedEntries.map(w=>[w.word,w]));
-    const detailedByWord = new Map([...automatedEntries.map(w=>[w.word,w]), ...window.qualityBatch004.map(w=>[w.word,w]), ...window.qualityBatch005.map(w=>[w.word,w]), ...window.qualityBatch006.map(w=>[w.word,w]), ...detailedWords.map(w=>[w.word,w])]);
+    const detailedByWord = new Map([...automatedEntries.map(w=>[w.word,w]), ...window.qualityBatch004.map(w=>[w.word,w]), ...window.qualityBatch005.map(w=>[w.word,w]), ...window.qualityBatch006.map(w=>[w.word,w]), ...window.qualityBatch007.map(w=>[w.word,w]), ...detailedWords.map(w=>[w.word,w])]);
     let nextImportedId = 1000;
     const words = window.vocabularyList.map(word=>detailedByWord.get(word)||{
       id:nextImportedId++, word, phonetic:'', meaning:'释义待补充',
@@ -383,7 +384,7 @@
       if(pos.includes('形容词'))return [`${word.exampleEn} The quality seemed atypical at first, but the evidence made it clear.`,`${word.exampleZh} 这种特征起初显得不典型，但证据使它变得清楚，把 ${word.word} 与已学词 atypical 串联起来。`];
       return [`${word.exampleEn} The expression made an abstract sentence easier to understand.`,`${word.exampleZh} 这个表达让一个抽象句子更容易理解，把 ${word.word} 与已学词 abstract 串联起来。`];
     }
-    words.forEach(word=>{if(word.reviewStatus==='已精修'&&word.id>=400){[word.storyEn,word.storyZh]=refinedStory(word);}});
+    words.forEach(word=>{if(word.reviewStatus==='已精修'&&word.id>=400&&word.id<700){[word.storyEn,word.storyZh]=refinedStory(word);}});
     words.forEach((word,index)=>{
       word.displayNo=index+1;
       if(word.reviewStatus==='已精修'&&!word.phonetic)word.phonetic=automatedByWord.get(word.word)?.phonetic||'';
