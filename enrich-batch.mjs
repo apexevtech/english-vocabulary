@@ -2,7 +2,10 @@ import fs from 'node:fs';
 
 const source = fs.readFileSync('/tmp/vocab_clipboard.txt', 'utf8');
 const all = [...new Set((source.slice(source.indexOf('abandon,')).match(/[A-Za-z]+/g) || []).map(x => x.toLowerCase()))];
-const words = all.slice(51, 100).filter(w => !['admission'].includes(w));
+const batch = Number(process.argv[2] || 2);
+const start = (batch - 1) * 50;
+const end = batch * 50;
+const words = all.slice(start, end).filter(w => !['admission'].includes(w));
 
 async function getJson(url) {
   const response = await fetch(url);
@@ -38,6 +41,6 @@ for (let i = 0; i < words.length; i += 4) {
   console.log(`${Math.min(i + 4, words.length)}/${words.length}`);
 }
 
-const js = `window.batch002Entries = ${JSON.stringify(results)};\n`;
-fs.writeFileSync('batch-002-data.js', js);
+const js = `window.batch${String(batch).padStart(3, '0')}Entries = ${JSON.stringify(results)};\n`;
+fs.writeFileSync(`batch-${String(batch).padStart(3, '0')}-data.js`, js);
 console.log(`wrote ${results.length} entries`);
