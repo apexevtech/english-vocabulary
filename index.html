@@ -376,6 +376,7 @@
       return {prefix,suffix,core,parts};
     }
     words.forEach((word,index)=>{
+      word.displayNo=index+1;
       if(word.id<2000) return;
       const split=memorySplit(word.word);
       const previous=words[Math.max(0,index-1)].word;
@@ -428,18 +429,18 @@
       const html=prefixGroups.map(group=>{
         const items=group.words.map(name=>visible.find(w=>w.word===name)).filter(Boolean);
         if(!items.length)return '';
-        const buttons=items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.id).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');
+        const buttons=items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.displayNo).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');
         return `<details class="word-group" data-group="${group.id}" ${collapsedGroups.has(group.id)?'':'open'}><summary><span class="group-title">${group.title}</span><span class="group-count">${items.length}</span></summary><div class="group-items">${buttons}</div></details>`;
       }).join('') + (()=>{
         const items=visible.filter(w=>!groupedNames.has(w.word));
         if(!items.length)return '';
         const buckets=new Map();
         items.forEach(w=>{const prefix=memorySplit(w.word).prefix;const key=prefix?prefix[0]:'whole';if(!buckets.has(key))buckets.set(key,{title:prefix?`${prefix[0]}-（${prefix[1]}）`:'整体词记忆',items:[]});buckets.get(key).items.push(w);});
-        return [...buckets.entries()].map(([key,bucket])=>{const groupId=`auto-${key}`;const buttons=bucket.items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.id).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');return `<details class="word-group" data-group="${groupId}" ${collapsedGroups.has(groupId)?'':'open'}><summary><span class="group-title">${bucket.title}</span><span class="group-count">${bucket.items.length}</span></summary><div class="group-items">${buttons}</div></details>`;}).join('');
+        return [...buckets.entries()].map(([key,bucket])=>{const groupId=`auto-${key}`;const buttons=bucket.items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.displayNo).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');return `<details class="word-group" data-group="${groupId}" ${collapsedGroups.has(groupId)?'':'open'}><summary><span class="group-title">${bucket.title}</span><span class="group-count">${bucket.items.length}</span></summary><div class="group-items">${buttons}</div></details>`;}).join('');
       })();
       el('wordList').innerHTML=html||'<div class="empty-list">当前分类暂无单词</div>';
       const picker=el('mobileWordPicker');
-      picker.innerHTML=visible.map(w=>`<option value="${w.id}">${String(w.id).padStart(3,'0')} · ${w.word}</option>`).join('');
+      picker.innerHTML=visible.map(w=>`<option value="${w.id}">${String(w.displayNo).padStart(3,'0')} · ${w.word}</option>`).join('');
       picker.value=visible.some(w=>w.id===words[current].id)?String(words[current].id):'';
       document.querySelectorAll('.word-group').forEach(d=>d.ontoggle=()=>{d.open?collapsedGroups.delete(d.dataset.group):collapsedGroups.add(d.dataset.group);});
       document.querySelectorAll('.word-item').forEach(b=>b.onclick=()=>{current=words.findIndex(w=>w.id===+b.dataset.id);render();playAudio(words[current].audioGb||words[current].audioUs);scrollToCurrentCard();});
@@ -449,7 +450,7 @@
       el('showLearned').classList.toggle('active',masteryFilter==='learned');
     }
     function render(){
-      const w=words[current]; el('index').textContent=`Word ${String(w.id).padStart(3,'0')}`; el('word').textContent=w.word; el('phonetic').textContent=w.phonetic; el('meaning').textContent=w.meaning;
+      const w=words[current]; el('index').textContent=`Word ${String(w.displayNo).padStart(3,'0')}`; el('word').textContent=w.word; el('phonetic').textContent=w.phonetic; el('meaning').textContent=w.meaning;
       el('formula').innerHTML=w.parts.map((p,i)=>`${i?'<span class="plus">+</span>':''}<span class="part">${p[0]} · ${p[1]}</span>`).join('');
       ['origin','mnemonic','note','exampleEn','exampleZh','storyEn','storyZh'].forEach(k=>el(k).textContent=w[k]);
       el('collocations').innerHTML=w.collocations.map(p=>`<div class="pair"><strong>${p[0]}</strong><span class="cn">${p[1]}</span></div>`).join('');
