@@ -196,6 +196,7 @@
   <script src="quality-batch-007.js"></script>
   <script src="quality-batch-008.js"></script>
   <script src="quality-batch-009.js"></script>
+  <script src="quality-batch-010.js"></script>
   <script src="refined-phonetics.js"></script>
   <script>
     const detailedWords = [{
@@ -372,7 +373,7 @@
     ];
     const automatedEntries=[...window.batchEntries,...window.batchEntries002,...window.batchEntries003,...window.batchRemainingEntries];
     const automatedByWord=new Map(automatedEntries.map(w=>[w.word,w]));
-    const detailedByWord = new Map([...automatedEntries.map(w=>[w.word,w]), ...window.qualityBatch004.map(w=>[w.word,w]), ...window.qualityBatch005.map(w=>[w.word,w]), ...window.qualityBatch006.map(w=>[w.word,w]), ...window.qualityBatch007.map(w=>[w.word,w]), ...window.qualityBatch008.map(w=>[w.word,w]), ...window.qualityBatch009.map(w=>[w.word,w]), ...detailedWords.map(w=>[w.word,w])]);
+    const detailedByWord = new Map([...automatedEntries.map(w=>[w.word,w]), ...window.qualityBatch004.map(w=>[w.word,w]), ...window.qualityBatch005.map(w=>[w.word,w]), ...window.qualityBatch006.map(w=>[w.word,w]), ...window.qualityBatch007.map(w=>[w.word,w]), ...window.qualityBatch008.map(w=>[w.word,w]), ...window.qualityBatch009.map(w=>[w.word,w]), ...window.qualityBatch010.map(w=>[w.word,w]), ...detailedWords.map(w=>[w.word,w])]);
     let nextImportedId = 1000;
     const words = window.vocabularyList.map(word=>detailedByWord.get(word)||{
       id:nextImportedId++, word, phonetic:'', meaning:'释义待补充',
