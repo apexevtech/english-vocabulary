@@ -394,9 +394,11 @@
       if(word.reviewStatus==='已精修'&&!word.phonetic)word.phonetic=automatedByWord.get(word.word)?.phonetic||'';
       if(word.id<2000) return;
       word.reviewStatus='待人工精修';
+      word.meaning='中文释义待人工精修';
+      word.pos='词性待人工精修';
       word.parts=[[word.word,'整体记忆（待精修）']];
       word.origin='该词已进入精修队列。完成词源核验前，不展示未经确认的前缀、词根或后缀。';
-      word.mnemonic=`先用读音、中文核心义“${word.meaning}”和例句记住该词；后续精修会补充可靠的构词联想。`;
+      word.mnemonic='该词已进入精修队列；完成词典义项、词性和构词核验后再展示记忆内容。';
       word.storyEn='';
       word.storyZh='该词尚未加入人工串联记忆；将在所属 50 词精修批次完成后补充。';
     });
