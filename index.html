@@ -420,9 +420,31 @@
       {id:'negative-a', title:'否定 a-（无、不）', words:['amoral','asocial','atypical','acentric','apathy','aperiodic','asexual','asymmetry']},
       {id:'state-a', title:'状态 / 方位 a-', words:['arise','awake','afresh','amass','afloat','ahead','alive','aside','ashore','alight']},
       {id:'ab-abs', title:'ab- / abs-（离开、去除）', words:['abject','abase','abnormal','abrupt','absent','absorb','abstract','abuse','abduct','abstain','abdicate','abjure','abrade','abrogate','abscise','abstinence','abstruse','abandon','abide','abroad','abundant','abdomen','abolish','abound','abbreviate','absolute','absurd']},
-      {id:'assimilated', title:'同化前缀 ac- / af- / ag- / ap-', words:['accelerate','accompany','accumulate','affirm','aggravate','appease','applause','appoint','appreciate','access','accomplish','according']},
+      {id:'prefix-ac', title:'ad- 同化为 ac-', words:['accelerate','accompany','accumulate','access','accomplish','according']},
+      {id:'prefix-af', title:'ad- 同化为 af-', words:['affirm']},
+      {id:'prefix-ag', title:'ad- 同化为 ag-', words:['aggravate']},
+      {id:'prefix-ap', title:'ad- 同化为 ap-', words:['appease','applause','appoint','appreciate']},
       {id:'whole-word', title:'整体词源 / 其他', words:['domain','akin','amend']}
     ];
+    const assimilatedPrefixTitles={
+      'ac-':'ad- 同化为 ac-', 'af-':'ad- 同化为 af-', 'ag-':'ad- 同化为 ag-',
+      'al-':'ad- 同化为 al-', 'an-':'ad- 同化为 an-', 'ap-':'ad- 同化为 ap-',
+      'ar-':'ad- 同化为 ar-', 'as-':'ad- 同化为 as-', 'at-':'ad- 同化为 at-'
+    };
+    function morphologyGroup(word){
+      if(word.reviewStatus!=='已精修')return {key:`pending-${word.word[0]}`,title:`${word.word[0].toUpperCase()} 开头（待精修）`};
+      const firstPart=(word.parts?.[0]?.[0]||'').toLowerCase();
+      if(assimilatedPrefixTitles[firstPart])return {key:`prefix-${firstPart}`,title:assimilatedPrefixTitles[firstPart]};
+      if(firstPart==='a-')return {key:'prefix-a-state',title:'a- 状态 / 方向前缀'};
+      if(firstPart==='ab-'||firstPart==='abs-')return {key:'prefix-ab-abs',title:'ab- / abs- 离开、去除'};
+      if(firstPart==='anti-')return {key:'prefix-anti',title:'anti- 在前 / 反对'};
+      if(firstPart==='apo-')return {key:'prefix-apo',title:'apo- 离开 / 解除'};
+      if(firstPart==='auto-')return {key:'prefix-auto',title:'auto- 自己 / 自动'};
+      if(firstPart.endsWith('-'))return {key:`prefix-${firstPart}`,title:`${firstPart} 前缀`};
+      const isCompound=word.parts?.length>1&&word.parts.every(part=>!part[0].startsWith('-')&&!part[0].endsWith('-'));
+      if(isCompound)return {key:'refined-compound',title:'复合词 / 词基组合（已精修）'};
+      return {key:'refined-root-whole',title:'词根联想 / 整体词（已精修）'};
+    }
     const el = id => document.getElementById(id);
     function scrollToCurrentCard(){
       if(window.matchMedia('(max-width:720px)').matches){
@@ -448,7 +470,7 @@
         const items=visible.filter(w=>!groupedNames.has(w.word));
         if(!items.length)return '';
         const buckets=new Map();
-        items.forEach(w=>{const refined=(w.reviewStatus||'已精修')==='已精修';const key=`${refined?'refined':'pending'}-${w.word[0]}`;if(!buckets.has(key))buckets.set(key,{title:`${w.word[0].toUpperCase()} 开头（${refined?'已精修':'待精修'}）`,items:[]});buckets.get(key).items.push(w);});
+        items.forEach(w=>{const group=morphologyGroup(w);if(!buckets.has(group.key))buckets.set(group.key,{title:group.title,items:[]});buckets.get(group.key).items.push(w);});
         return [...buckets.entries()].map(([key,bucket])=>{const groupId=`auto-${key}`;const buttons=bucket.items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.displayNo).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');return `<details class="word-group" data-group="${groupId}" ${collapsedGroups.has(groupId)?'':'open'}><summary><span class="group-title">${bucket.title}</span><span class="group-count">${bucket.items.length}</span></summary><div class="group-items">${buttons}</div></details>`;}).join('');
       })();
       el('wordList').innerHTML=html||'<div class="empty-list">当前分类暂无单词</div>';
