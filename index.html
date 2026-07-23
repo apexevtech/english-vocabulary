@@ -194,6 +194,7 @@
   <script src="quality-batch-005.js"></script>
   <script src="quality-batch-006.js"></script>
   <script src="quality-batch-007.js"></script>
+  <script src="quality-batch-008.js"></script>
   <script>
     const detailedWords = [{
       id:1, word:'abject', phonetic:'英 /ˈæbdʒekt/  ·  美 /ˈæbdʒekt/  ·  重音在第一音节', meaning:'极其悲惨的；卑躬屈膝的；卑劣的',
@@ -369,7 +370,7 @@
     ];
     const automatedEntries=[...window.batchEntries,...window.batchEntries002,...window.batchEntries003,...window.batchRemainingEntries];
     const automatedByWord=new Map(automatedEntries.map(w=>[w.word,w]));
-    const detailedByWord = new Map([...automatedEntries.map(w=>[w.word,w]), ...window.qualityBatch004.map(w=>[w.word,w]), ...window.qualityBatch005.map(w=>[w.word,w]), ...window.qualityBatch006.map(w=>[w.word,w]), ...window.qualityBatch007.map(w=>[w.word,w]), ...detailedWords.map(w=>[w.word,w])]);
+    const detailedByWord = new Map([...automatedEntries.map(w=>[w.word,w]), ...window.qualityBatch004.map(w=>[w.word,w]), ...window.qualityBatch005.map(w=>[w.word,w]), ...window.qualityBatch006.map(w=>[w.word,w]), ...window.qualityBatch007.map(w=>[w.word,w]), ...window.qualityBatch008.map(w=>[w.word,w]), ...detailedWords.map(w=>[w.word,w])]);
     let nextImportedId = 1000;
     const words = window.vocabularyList.map(word=>detailedByWord.get(word)||{
       id:nextImportedId++, word, phonetic:'', meaning:'释义待补充',
