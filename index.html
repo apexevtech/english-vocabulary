@@ -19,6 +19,9 @@
     .status-filter { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:10px; padding:3px; border:1px solid var(--line); border-radius:6px; background:#e3e8e4; }
     .status-filter button { height:34px; border:0; border-radius:4px; background:transparent; color:var(--muted); font-size:13px; font-weight:700; }
     .status-filter button.active { background:white; color:var(--green); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+    .quality-filter { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; margin-top:7px; padding:3px; border:1px solid var(--line); border-radius:6px; background:#e3e8e4; }
+    .quality-filter button { height:32px; border:0; border-radius:4px; background:transparent; color:var(--muted); font-size:12px; font-weight:700; }
+    .quality-filter button.active { background:white; color:var(--green); box-shadow:0 1px 2px rgba(0,0,0,.08); }
     .count { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; margin:16px 4px 8px; }
     .word-list { display:grid; gap:6px; }
     .word-group { border-top:1px solid #d6ddd8; }
@@ -117,6 +120,11 @@
       <div class="status-filter" aria-label="掌握状态筛选">
         <button id="showUnlearned" class="active">未掌握</button>
         <button id="showLearned">已掌握</button>
+      </div>
+      <div class="quality-filter" aria-label="精修状态筛选">
+        <button id="showAllQuality" class="active">全部</button>
+        <button id="showRefined">已精修</button>
+        <button id="showPending">待精修</button>
       </div>
       <select id="mobileWordPicker" class="mobile-word-picker" aria-label="选择单词"></select>
       <div class="count"><span id="total">1 个单词</span><span id="progress">已掌握 0</span></div>
@@ -388,6 +396,7 @@
     let current = 0;
     const learned = new Set(JSON.parse(localStorage.getItem('vocab-learned') || '[]'));
     let masteryFilter = 'unlearned';
+    let qualityFilter = 'all';
     const collapsedGroups = new Set();
     const partsOfSpeech = {
       abject:'形容词（adj.）', domain:'名词（n.）', amoral:'形容词（adj.）', asocial:'形容词（adj.）',
@@ -422,7 +431,11 @@
     }
     function renderList(filter='') {
       const q=filter.trim().toLowerCase();
-      const visible=words.filter(w=>(masteryFilter==='learned'?learned.has(w.id):!learned.has(w.id))&&(w.word.includes(q)||w.meaning.includes(filter)));
+      const visible=words.filter(w=>{
+        const masteryMatches=masteryFilter==='learned'?learned.has(w.id):!learned.has(w.id);
+        const qualityMatches=qualityFilter==='all'||(qualityFilter==='refined'?(w.reviewStatus||'已精修')==='已精修':w.reviewStatus==='待人工精修');
+        return masteryMatches&&qualityMatches&&(w.word.includes(q)||w.meaning.includes(filter));
+      });
       const groupedNames=new Set(prefixGroups.flatMap(group=>group.words));
       const html=prefixGroups.map(group=>{
         const items=group.words.map(name=>visible.find(w=>w.word===name)).filter(Boolean);
@@ -433,7 +446,7 @@
         const items=visible.filter(w=>!groupedNames.has(w.word));
         if(!items.length)return '';
         const buckets=new Map();
-        items.forEach(w=>{const key=w.word[0];if(!buckets.has(key))buckets.set(key,{title:`${key.toUpperCase()} 开头（待精修）`,items:[]});buckets.get(key).items.push(w);});
+        items.forEach(w=>{const refined=(w.reviewStatus||'已精修')==='已精修';const key=`${refined?'refined':'pending'}-${w.word[0]}`;if(!buckets.has(key))buckets.set(key,{title:`${w.word[0].toUpperCase()} 开头（${refined?'已精修':'待精修'}）`,items:[]});buckets.get(key).items.push(w);});
         return [...buckets.entries()].map(([key,bucket])=>{const groupId=`auto-${key}`;const buttons=bucket.items.map(w=>`<button class="word-item ${w.id===words[current].id?'active':''} ${learned.has(w.id)?'learned':''}" data-id="${w.id}"><span>${String(w.displayNo).padStart(3,'0')} · ${w.word}</span><i class="dot"></i></button>`).join('');return `<details class="word-group" data-group="${groupId}" ${collapsedGroups.has(groupId)?'':'open'}><summary><span class="group-title">${bucket.title}</span><span class="group-count">${bucket.items.length}</span></summary><div class="group-items">${buttons}</div></details>`;}).join('');
       })();
       el('wordList').innerHTML=html||'<div class="empty-list">当前分类暂无单词</div>';
@@ -446,6 +459,9 @@
       el('progress').textContent=`已掌握 ${learned.size}`;
       el('showUnlearned').classList.toggle('active',masteryFilter==='unlearned');
       el('showLearned').classList.toggle('active',masteryFilter==='learned');
+      el('showAllQuality').classList.toggle('active',qualityFilter==='all');
+      el('showRefined').classList.toggle('active',qualityFilter==='refined');
+      el('showPending').classList.toggle('active',qualityFilter==='pending');
     }
     function render(){
       const w=words[current]; el('index').textContent=`Word ${String(w.displayNo).padStart(3,'0')}`; el('word').textContent=w.word; el('phonetic').textContent=w.phonetic; el('meaning').textContent=w.meaning; el('quality').textContent=w.reviewStatus||'已精修';
@@ -461,6 +477,9 @@
     el('mobileWordPicker').onchange=e=>{current=words.findIndex(w=>w.id===+e.target.value);render();playAudio(words[current].audioGb||words[current].audioUs);scrollToCurrentCard();};
     el('showUnlearned').onclick=()=>{masteryFilter='unlearned';renderList(el('search').value);};
     el('showLearned').onclick=()=>{masteryFilter='learned';renderList(el('search').value);};
+    el('showAllQuality').onclick=()=>{qualityFilter='all';renderList(el('search').value);};
+    el('showRefined').onclick=()=>{qualityFilter='refined';renderList(el('search').value);};
+    el('showPending').onclick=()=>{qualityFilter='pending';renderList(el('search').value);};
     el('toggleCn').onclick=()=>{el('card').classList.toggle('hidden-cn');el('toggleCn').textContent=el('card').classList.contains('hidden-cn')?'显示中文':'隐藏中文';};
     el('mastered').onclick=()=>{const id=words[current].id;learned.has(id)?learned.delete(id):learned.add(id);localStorage.setItem('vocab-learned',JSON.stringify([...learned]));render();};
     el('prev').onclick=()=>{if(current>0){current--;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}}; el('next').onclick=()=>{if(current<words.length-1){current++;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}};
