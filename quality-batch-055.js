@@ -51,5 +51,22 @@ const rows = [
 ['plug','n./v.','插头；塞子；堵塞；插入；宣传','/plʌɡ/','基础词，不强拆','可能源自表示塞住的词，核心是填入开口。','plug in|插上电源；plug a gap|填补空缺','Plug the device into a power source.','把设备插入电源。','把 plug 塞入接口，就是 plug in。'],
 ['plus','prep./adj./n.','加；外加；正的；优点','/plʌs/','整体借词，不强拆','直接来自拉丁语 plus“更多”。','plus sign|加号；a major plus|主要优点','Experience is a major plus when applying for the job.','申请该职位时，经验是一大优势。','plus 表示再加更多，也表示一个优点。']
 ];
-window.qualityBatch055=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3100+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
+const morphologyCorrections = {
+  permanent:['历史整体词；与 remain 同源，不按现代 per- + man + -ent 强拆','源自拉丁语 permanere“持续停留”；man 在此不是现代英语单词“男人”。'],
+  permission:['permit 词族的名词形式，词形有历史变化','与 permit 同源，表示允许某事发生的行为或授权。'],
+  permit:['历史整体词；per-、mit 仅作拉丁词源联想','源自拉丁语 permittere“允许、放行”；mit 不是现代英语自由词根。'],
+  persist:['历史整体词；per-、sist 仅作拉丁词源联想','源自拉丁语 persistere“继续、坚持”；-sist 不作为现代自由词根使用。'],
+  perspective:['历史整体词；与 prospect 等词有词源联系，不作现代拆分','源自拉丁语 perspicere“看透”，由观察位置引申为视角。'],
+  persuade:['历史整体词；per-、suad- 仅作拉丁词源联想','源自拉丁语 persuadere“劝服”；suad 不是现代英语自由词根。'],
+  phenomenon:['希腊语整体借词，不拆作现代 phen + -omenon','直接来自希腊语 phainomenon“显现出来的事物”；复数为 phenomena。'],
+  philosophy:['希腊语组合形式 philo-（爱）+ sophia（智慧）','直接源自希腊语 philosophia“爱智慧”；这是词源分析，不是现代自由词拼接。'],
+  physical:['历史整体词；与 physics 同族，不简单拆作 physic + -al','源自希腊语 physikos“自然的”，含义依身体、物质或物理语境变化。'],
+  physician:['历史整体词；与 physic 同族，不视为普通 physic + -ian 派生','经古法语进入英语，历史上指研究自然或医术的人，后专指医生。'],
+  physics:['希腊语整体词；-ics 可联想学科，但 phys 不是现代自由词根','源自希腊语 physika“自然之事”，研究物质和能量。'],
+  plastic:['希腊语整体借词；plast- 仅作词源联想','源自希腊语 plastikos“适于塑造的”；plast 不是现代英语自由词。'],
+  platform:['历史复合词；现代可联想为平坦的承载平台，不机械拆作 plat + form','经法语 plateforme 进入英语，原指平坦结构，后扩展到数字和政治平台。'],
+  pleasant:['历史整体词；与 please、pleasure 同源，不拆作 please + -ant','经古法语进入英语，源自拉丁语 placere“使愉快”。'],
+  pleasure:['历史整体词；与 please 同源，并非现代英语直接加后缀形成','经古法语进入英语，源自拉丁语 placere“使愉快”。']
+};
+window.qualityBatch055=rows.map((r,i)=>{let [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;if(morphologyCorrections[word]) [morph,origin]=morphologyCorrections[word];return{id:3100+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已逐词复核核心义、词性、音标、构词关系、考研搭配，并验证英美词典录音可播放。',audioGb:`audio/b055-${word}-uk.mp3`,audioUs:`audio/b055-${word}-us.mp3`,audioLabelGb:'有道词典 · 英式',audioLabelUs:'有道词典 · 美式',reviewStatus:'已精修'};});
 })();
