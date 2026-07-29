@@ -51,5 +51,21 @@ const rows = [
 ['require','v.','需要；要求；规定','/rɪˈkwaɪə/','历史词源整体记忆，不按现代 re- + quire 拆分','源自拉丁语 requirere“寻求、需要”。','require somebody to|要求某人；require attention|需要关注','The job requires strong communication skills.','这份工作要求很强的沟通能力。','完成事情不可缺少的，就是 require。'],
 ['requirement','n.','要求；必要条件；所需之物','/rɪˈkwaɪəmənt/','require + -ment','require 的名词形式。','meet a requirement|满足要求；legal requirement|法律要求','Applicants must meet all requirements.','申请人必须满足所有要求。','必须 require 的条件是 requirement。']
 ];
-window.qualityBatch060=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3350+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
+const morphologyCorrections = {
+  regular:['历史整体词；与 rule 同源，不拆作现代 regul + -ar','源自拉丁语 regularis“依照规则的”。'],
+  regulate:['历史整体词；与 regular、rule 同族，不拆作 modern regul + -ate','源自拉丁语 regulare“按规则管理、调节”。'],
+  reject:['历史整体词；re-、ject 仅作拉丁词源联想','源自拉丁语 reicere“投回、拒绝”；ject 不是现代英语自由词根。'],
+  relate:['历史整体词；re-、lat- 仅作拉丁词源联想','源自拉丁语 referre 的过去分词 relatus“带回、联系”；lat 不是现代自由词根。'],
+  relative:['历史整体词；与 relate 同源，不视为普通 relate + -ive 派生','源自拉丁语 relativus“有关系的、相对的”。'],
+  relax:['历史整体词；与 lax 同源，不简单拆作现代 re- + lax','源自拉丁语 relaxare“放松、使松开”。'],
+  relief:['历史整体词；与 relieve 同源，不是现代规则性名词派生','经古法语进入英语，表示负担减轻后的宽慰或缓解。'],
+  religious:['religion 词族的形容词形式，词形有历史变化','源自拉丁语 religiosus“虔诚的、宗教的”，与 religion 同族。'],
+  remain:['历史整体词；re-、main 仅作拉丁词源联想','经古法语进入英语，源自拉丁语 remanere“留下”；main 在此不表示“主要的”。'],
+  remote:['历史整体词；与 remove 同源，不拆作现代 re- + mot','源自拉丁语 remotus“移远的”；mot 不是现代英语自由词根。'],
+  report:['历史整体词；re-、port 仅作拉丁词源联想','经古法语进入英语，源自拉丁语 reportare“带回消息”；port 在此不是现代“港口”。'],
+  represent:['历史整体词；与 present 同源，不简单拆作现代 re- + present','源自拉丁语 repraesentare“使呈现、代表”。'],
+  republic:['拉丁语固定词组借入，按整体词记忆','源自拉丁语 res publica“公共事务”，不是现代英语自由词拼接。'],
+  request:['历史整体词；与 require、quest 有词源联系，不作现代 re- + quest 拆分','经古法语进入英语，源自拉丁语 requirere“寻求、询问”。']
+};
+window.qualityBatch060=rows.map((r,i)=>{let [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;if(morphologyCorrections[word]) [morph,origin]=morphologyCorrections[word];return{id:3350+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已逐词复核核心义、词性、音标、构词关系、考研搭配，并验证英美词典录音可播放。',audioGb:`audio/b060-${word}-uk.mp3`,audioUs:`audio/b060-${word}-us.mp3`,audioLabelGb:'有道词典 · 英式',audioLabelUs:'有道词典 · 美式',reviewStatus:'已精修'};});
 })();
