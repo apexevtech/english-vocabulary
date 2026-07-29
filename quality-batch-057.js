@@ -51,5 +51,33 @@ const rows = [
 ['prompt','adj./v./n.','迅速的；促使；提示','/prɒmpt/','整体借词，不强拆','拉丁语 promptus“准备好的、迅速的”。','prompt action|迅速行动；prompt somebody to|促使某人','The findings prompted the government to act.','研究结果促使政府采取行动。','及时出现的提示 prompt 能促使行动。'],
 ['proof','n./adj.','证据；证明；校样；防……的','/pruːf/','prove 对应的名词','与 prove 同源，指能证明事实的证据。','proof of|……的证据；scientific proof|科学证明','There is no proof that the policy caused the decline.','没有证据表明该政策导致了下降。','能 prove 结论的材料是 proof。']
 ];
-window.qualityBatch057=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3200+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
+const morphologyCorrections = {
+  preserve:['历史整体词；pre-、serv- 仅作拉丁词源联想','源自拉丁语 praeservare“事先守护”；serv 不是现代英语自由词根。'],
+  president:['历史整体词；与 preside 同族，不视为现代 preside + -ent 派生','源自拉丁语 praesidens“主持者”，原指坐在前面主持的人。'],
+  pretend:['历史整体词；pre-、tend 仅作拉丁词源联想','源自拉丁语 praetendere“伸到前面、声称”；现代 tend 并非其直接词基。'],
+  prevail:['历史整体词；pre-、val- 仅作拉丁词源联想','源自拉丁语 praevalere“更强、更占优势”。'],
+  prevent:['历史整体词；pre-、vent 仅作拉丁词源联想','源自拉丁语 praevenire“先到、阻止”；vent 不是现代英语自由词根。'],
+  previous:['历史整体词；pre-、vi- 仅作拉丁词源联想','源自拉丁语 praevius“走在前面的”，表示时间或顺序更早。'],
+  primary:['历史整体借词；与 prime 同源，不拆作现代 prim + -ary','源自拉丁语 primarius“第一位的”。'],
+  prime:['拉丁语整体借词，不把 prim 当作现代自由词根','源自拉丁语 primus“第一的”，表示首要或最好的。'],
+  primitive:['历史整体词；与 prime 同源，不拆作现代 prim + -itive','源自拉丁语 primitivus“最初的”。'],
+  principal:['历史整体词；与 principle 同源，不拆作 modern princip + -al','源自拉丁语 principalis“首要的”；注意与 principle 的拼写和意义区别。'],
+  privilege:['历史整体词；词源含“个人法律”，不拆作现代 privi + lege','源自拉丁语 privilegium“适用于个人的法律”，后指特殊权利。'],
+  probable:['历史整体词；与 prove 同源，不拆作现代 prob + -able','源自拉丁语 probabilis“可信、很可能的”。'],
+  procedure:['历史整体词；与 proceed 同源，不视为现代 proceed + -ure 派生','经法语进入英语，源自拉丁语 procedere“向前进行”，表示一套步骤。'],
+  proceed:['历史整体词；pro-、-ceed 仅作拉丁词源联想','源自拉丁语 procedere“向前走”；-ceed 不是现代英语自由词根。'],
+  process:['历史整体词；pro-、cess- 仅作拉丁词源联想','源自拉丁语 processus“向前推进”，后指连续步骤。'],
+  produce:['历史整体词；pro-、-duce 仅作拉丁词源联想','源自拉丁语 producere“引出、带出”；注意动词和名词重音。'],
+  product:['历史整体词；与 produce 同源，不拆作现代 pro- + duct','源自拉丁语 productum“被带出之物”，即产物。'],
+  profession:['历史整体词；pro-、fess- 仅作拉丁词源联想','源自拉丁语 professio“公开声明、职业”；fess 不是现代自由词根。'],
+  professor:['历史整体词；与 profess 同族，不视为普通 profess + -or 派生','源自拉丁语 professor“公开宣称或讲授的人”。'],
+  program:['希腊语整体借词；pro-、gram 仅作词源联想','源自希腊语 programma“预先写下的公告”；gram 不是现代自由词。'],
+  progress:['历史整体词；pro-、gress- 仅作拉丁词源联想','源自拉丁语 progressus“向前走”；注意名词与动词重音。'],
+  prohibit:['历史整体词；pro-、hibit- 仅作拉丁词源联想','源自拉丁语 prohibere“挡在前面、制止”。'],
+  project:['历史整体词；pro-、ject 仅作拉丁词源联想','源自拉丁语 proicere“向前投”；名词与动词重音不同。'],
+  prominent:['历史整体词；pro-、min- 仅作拉丁词源联想','源自拉丁语 prominere“向前突出”；min 在此不表示“小”。'],
+  promote:['历史整体词；pro-、mot- 仅作拉丁词源联想','源自拉丁语 promovere“向前推动”；mot 不是现代自由词根。'],
+  proof:['历史整体词；与 prove 同源，不是现代规则下的名词派生','经古法语进入英语，表示足以证明事实的证据。']
+};
+window.qualityBatch057=rows.map((r,i)=>{let [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;if(morphologyCorrections[word]) [morph,origin]=morphologyCorrections[word];return{id:3200+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已逐词复核核心义、词性、音标、构词关系、考研搭配，并验证英美词典录音可播放。',audioGb:`audio/b057-${word}-uk.mp3`,audioUs:`audio/b057-${word}-us.mp3`,audioLabelGb:'有道词典 · 英式',audioLabelUs:'有道词典 · 美式',reviewStatus:'已精修'};});
 })();
