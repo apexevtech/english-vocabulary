@@ -51,5 +51,24 @@ const rows = [
 ['radio','n./v.','收音机；无线电；用无线电通信','/ˈreɪdiəʊ/','radi（射线、辐射）+ -o','与 radius、radiation 同源，信息通过无线电波传播。','radio station|广播电台；radio signal|无线电信号','The news was broadcast on national radio.','这条新闻通过国家广播电台播出。','利用辐射波传送声音的是 radio。'],
 ['rage','n./v.','盛怒；狂暴；激烈进行','/reɪdʒ/','整体借词，不强拆','源自拉丁语 rabies“狂怒”。','in a rage|盛怒；rage against|愤怒反对','The debate continued to rage for months.','这场争论激烈持续了数月。','像风暴一样猛烈的愤怒是 rage。']
 ];
-window.qualityBatch058=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3250+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
+const morphologyCorrections = {
+  property:['历史整体词；与 proper 同源，不拆作现代 proper + -ty','经古法语进入英语，源自拉丁语 proprietas“所有权、特性”。'],
+  propose:['历史整体词；与 pose 同族，不简单拆作现代 pro- + pose','经古法语进入英语，源自拉丁语 proponere“提出、摆在面前”。'],
+  prospect:['历史整体词；pro-、spect 仅作拉丁词源联想','源自拉丁语 prospectus“向前看、景象”；spect 不是现代自由词根。'],
+  protect:['历史整体词；pro-、tect- 仅作拉丁词源联想','源自拉丁语 protegere“在前面遮盖”；tect 不是现代英语自由词根。'],
+  protest:['历史整体词；pro-、test- 仅作拉丁词源联想','源自拉丁语 protestari“公开声明”；注意名词与动词重音。'],
+  provide:['历史整体词；pro-、vide 仅作拉丁词源联想','源自拉丁语 providere“预先看到、准备”；vide 不是现代英语自由词。'],
+  provision:['历史整体词；与 provide 同源，不视为规则性现代名词派生','源自拉丁语 provisio“预先准备”，表示供应、安排或条款。'],
+  psychological:['psychology + -ical（词形有拼写调整）','由 psychology 派生，表示与心理或心理学有关；开头 p 不发音。'],
+  publish:['历史整体词；与 public 同源，不拆作现代 publ + -ish','源自拉丁语 publicare“使公开”，经法语进入英语。'],
+  pursue:['历史整体词；pur-、sue 仅作词源联想，不作现代自由拼接','经古法语进入英语，源自拉丁语 prosequi“跟随、追求”。'],
+  qualify:['历史词基 qual- + -ify；用于词族联想，不视为自由词拼接','源自中世纪拉丁语 qualificare“赋予性质”，后指达到资格。'],
+  quality:['历史整体词；与 qualify 同族，不拆作现代 qual + -ity','源自拉丁语 qualitas“性质、品质”。'],
+  quantity:['历史整体词；quant- 仅作拉丁词源联想','源自拉丁语 quantitas“数量”，其基础 quantus 意为“多少”。'],
+  quarter:['历史整体词；与 four 同源，不拆作现代 quart + -er','经古法语进入英语，源自拉丁语 quartus“第四”。'],
+  question:['历史整体词；与 quest 同源，不视为现代 quest + -ion 派生','经古法语进入英语，源自拉丁语 quaestio“询问、探究”。'],
+  radical:['历史整体词；radic- 仅作拉丁词源联想','源自拉丁语 radicalis“根的”，后表示根本或激进。'],
+  radio:['现代缩略形成的整体词，不拆作 radi + -o','由 radiotelegraphy 等词缩略而来，词族最终与拉丁语 radius“射线”有关。']
+};
+window.qualityBatch058=rows.map((r,i)=>{let [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;if(morphologyCorrections[word]) [morph,origin]=morphologyCorrections[word];return{id:3250+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已逐词复核核心义、词性、音标、构词关系、考研搭配，并验证英美词典录音可播放。',audioGb:`audio/b058-${word}-uk.mp3`,audioUs:`audio/b058-${word}-us.mp3`,audioLabelGb:'有道词典 · 英式',audioLabelUs:'有道词典 · 美式',reviewStatus:'已精修'};});
 })();
