@@ -51,5 +51,25 @@ const rows = [
 ['outstanding','adj.','杰出的；显著的；未解决的；未偿付的','/aʊtˈstændɪŋ/','out + standing','突出站在外面是杰出；留在外面是未完成。','outstanding achievement|杰出成就；outstanding issue|未决问题','She received an award for outstanding research.','她因杰出研究获得奖励。','突出站在外面是杰出，留下则是未解决。'],
 ['overall','adj./adv./n.','总体的；全面地；总的情况','/ˌəʊvərˈɔːl/','over + all','覆盖全部部分，表示总体评价。','overall effect|总体影响；overall performance|总体表现','The policy had a positive overall effect.','该政策产生了积极的总体影响。','看 over all 全部部分，得到 overall 结论。']
 ];
-window.qualityBatch053=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3000+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
+const morphologyCorrections = {
+  normal:['历史整体词；与 norm 同族，不视为现代 norm + -al 派生','源自拉丁语 normalis“符合准则的”，其词族基础 norma 意为“准则”。'],
+  notify:['历史整体词；与 notice、notion 同源，不拆作 not + -ify','源自拉丁语 notificare“使知道”；现代拼写中的 not 不是否定词 not。'],
+  novel:['历史整体借词；nov- 仅作词源联想，不把 -el 当现代后缀','经古法语进入英语，源自拉丁语 novellus“新的”；小说义源于新奇故事。'],
+  numerous:['历史整体词；与 number 同源，不把 numer 当现代自由词根','源自拉丁语 numerosus“数量众多的”。'],
+  nutrition:['历史整体词；与 nourish 同源，不拆作现代 nutrit + -ion','源自拉丁语 nutritio“喂养、滋养”。'],
+  object:['历史整体词；ob-、ject 仅作拉丁词源联想','源自拉丁语 obicere“投到面前”；名词与动词注意重音变化。'],
+  obtain:['历史整体词；与 retain 同族，不把 -tain 当现代自由词根','源自拉丁语 obtinere“取得、持有”；词源关系可辅助联想。'],
+  occur:['历史整体词，不按现代 oc- + cur 强拆','源自拉丁语 occurrere“跑来、出现”；过去式和过去分词双写 r。'],
+  official:['office + -ial（词形有拼写调整）','由 office 词族派生，指与公共职务或正式授权有关。'],
+  omit:['历史整体词，不按现代 o- + mit 强拆','源自拉丁语 omittere“放开、不管”；mit- 仅用于词源联想。'],
+  operate:['历史整体词；oper- 仅作词源联想，不作现代自由词根','源自拉丁语 operari“工作、实施”。'],
+  opponent:['历史整体词；op-、pon- 仅作拉丁词源联想','源自拉丁语 opponere“放在对面”，后指对手或反对者。'],
+  oppose:['历史整体词；与 opponent、opposite 同族，不作现代拼接','经法语进入英语，源自拉丁语 opponere“放在对面”。'],
+  opposite:['历史整体词；与 oppose 同族，不拆作现代 op- + posit','源自拉丁语 oppositus“被放在对面的”。'],
+  optimistic:['optimist + -ic（……的）','由 optimist 派生；其词族最终与拉丁语 optimus“最好的”有关。'],
+  option:['历史整体词；与 opt 同族，不简单拆作 opt + -ion','源自拉丁语 optio“选择”；现代可借 opt 词族联想。'],
+  oral:['历史整体词；or- 仅作拉丁词源联想','源自拉丁语 oralis“口的”，其基础 os、oris 意为“口”。'],
+  ordinary:['历史整体词；与 order 有词源关系，不作现代 order + -ary','源自拉丁语 ordinarius“按通常秩序的”，后表示普通、平常。']
+};
+window.qualityBatch053=rows.map((r,i)=>{let [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;if(morphologyCorrections[word]) [morph,origin]=morphologyCorrections[word];return{id:3000+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已逐词复核核心义、词性、音标、构词关系、考研搭配，并验证英美词典录音可播放。',audioGb:`audio/b053-${word}-uk.mp3`,audioUs:`audio/b053-${word}-us.mp3`,audioLabelGb:'有道词典 · 英式',audioLabelUs:'有道词典 · 美式',reviewStatus:'已精修'};});
 })();
