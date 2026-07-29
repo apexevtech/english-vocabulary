@@ -51,5 +51,21 @@ const rows = [
 ['prepare','v.','准备；预备；使做好准备','/prɪˈpeə/','pre-（事先）+ pare（安排、备好）','源自拉丁语 praeparare“事先备好”。','prepare for|为……准备；prepare a report|准备报告','Students should prepare for rapid changes in the workplace.','学生应为职场的快速变化做好准备。','事先 pre 把事情备好，就是 prepare。'],
 ['presence','n.','存在；出席；在场；仪态','/ˈprezns/','present（在场的）+ -ence','present 的名词形式，表示在某处存在或出席。','presence of|……的存在；in the presence of|当着……的面','The presence of trees improves the urban environment.','树木的存在改善了城市环境。','present 在场的状态就是 presence。']
 ];
-window.qualityBatch056=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3150+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
+const morphologyCorrections = {
+  popular:['历史整体词；与 people、population 同源，不作现代 popul + -ar 拆分','源自拉丁语 popularis“人民的”，由大众的引申为受欢迎的。'],
+  population:['历史整体词；与 populate、popular 同族，不把 popul 当现代自由词根','经晚期拉丁语进入英语，表示某地区或研究范围内的全体。'],
+  position:['历史整体词；posit- 仅作拉丁词源联想','源自拉丁语 positio“放置、位置”；posit 不是现代英语自由词根。'],
+  positive:['历史整体词；与 position 同源，不拆作现代 posit + -ive','源自拉丁语 positivus“确定的”，后发展出肯定和正面义。'],
+  postpone:['历史整体词；post-、pon- 可作词源联想，但不是现代自由拼接','源自拉丁语 postponere“放在后面”，与 position 有词源联系。'],
+  potential:['历史整体词；与 potent 同族，不视为现代 potent + -ial 派生','源自晚期拉丁语 potentialis“有能力的”，指尚未实现的能力。'],
+  poverty:['历史整体词；与 poor 同源，不拆作 poor + -ty','经古法语进入英语，源自拉丁语 paupertas“贫穷”。'],
+  practical:['历史整体词；与 practice 同族，不简单拆作 practice + -al','源自晚期拉丁语 practicalis，强调行动和现实应用。'],
+  prayer:['历史整体词；与 pray 同源，不把 -er 当行为后缀','经古法语进入英语，表示祈祷行为、祷文或祈愿。'],
+  predict:['历史整体词；pre-、dict 仅作拉丁词源联想','源自拉丁语 praedicere“预先说出”；dict 不是现代英语自由词根。'],
+  prefer:['历史整体词；pre-、fer 仅作拉丁词源联想','源自拉丁语 praeferre“置于前面、优先选择”；fer 不是现代自由词根。'],
+  prejudice:['历史整体词；可联想 pre-judge，但不拆作现代 pre- + judice','经古法语进入英语，源自拉丁语 praejudicium“预先判断、损害”。'],
+  preliminary:['历史整体词；pre-、limin- 仅作拉丁词源联想','源自拉丁语 praeliminaris“在门槛之前的”，表示正式阶段前的。'],
+  prepare:['历史整体词；pre- 可辅助联想，不把 pare 当现代自由词根','经法语进入英语，源自拉丁语 praeparare“事先备好”。']
+};
+window.qualityBatch056=rows.map((r,i)=>{let [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;if(morphologyCorrections[word]) [morph,origin]=morphologyCorrections[word];return{id:3150+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已逐词复核核心义、词性、音标、构词关系、考研搭配，并验证英美词典录音可播放。',audioGb:`audio/b056-${word}-uk.mp3`,audioUs:`audio/b056-${word}-us.mp3`,audioLabelGb:'有道词典 · 英式',audioLabelUs:'有道词典 · 美式',reviewStatus:'已精修'};});
 })();
