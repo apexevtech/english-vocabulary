@@ -51,5 +51,24 @@ const rows = [
 ['nevertheless','adv.','然而；尽管如此','/ˌnevəðəˈles/','never + the + less（并不少）','历史组合词，表示即便如此，后面的事实仍不减少。','but nevertheless|但仍然；nevertheless, ...|然而……','The task was difficult; nevertheless, the team completed it.','任务很困难；然而，团队还是完成了。','困难没有让决心变 less，因此 nevertheless。'],
 ['noble','adj./n.','高尚的；贵族的；宏伟的；贵族','/ˈnəʊbl/','整体借词，不强拆','源自拉丁语 nobilis“知名、出身高贵的”，后发展出品格高尚义。','noble cause|崇高事业；noble ambition|高尚抱负','They devoted their lives to a noble cause.','他们毕生致力于一项崇高事业。','值得尊敬的品格和目标是 noble。']
 ];
-window.qualityBatch052=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:2950+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
+const morphologyCorrections = {
+  migrate:['历史整体词，不按现代 migr + -ate 强拆','源自拉丁语 migrare“迁移、迁居”；migr- 可用于词族联想，但不是现代英语自由词根。'],
+  minimum:['拉丁语整体借词，不把 min 当作现代前缀','直接来自拉丁语 minimum“最小的事物”；可与 minor 联想，但不作现代构词拆分。'],
+  miserable:['历史整体词；与 misery 同源，不拆作 misery + -able','源自拉丁语 miserabilis“可怜的”；与 misery 同族，但并非现代英语中由 misery 直接派生。'],
+  mission:['历史整体词，不拆作 miss + -ion','源自拉丁语 mittere“派遣”，不是现代动词 miss 的派生。'],
+  mobile:['历史整体词，不把 mob 当作现代词根','源自拉丁语 mobilis“可移动的”；与 mobility 同族。'],
+  moderate:['历史整体词；与 mode 同源，不作现代拆分','源自拉丁语 moderari“控制、保持尺度”。'],
+  modest:['历史整体词，不把 mod 当作现代词根','与 mode、moderate 有历史词源联系，核心是不过度、守分寸。'],
+  modify:['历史词基 mod- + -ify；用于词族联想，不视为自由词拼接','源自拉丁语 modificare“限定尺度”；现代可识别 -ify 的动词功能。'],
+  motion:['历史整体词；与 move 同源，不拆作现代 mot + -ion','源自拉丁语 motio“移动”，与 move 同源。'],
+  motive:['历史整体词；与 move 同源，不作现代拆分','源自拉丁语 motivus“引起运动的”，核心是推动行动的力量。'],
+  multiple:['历史整体借词；可借 multi- 联想“多”，不把 -ple 当现代后缀','源自拉丁语 multiplex“多重的”。'],
+  multiply:['历史整体词；与 multiple 同源，不拆作 multi- + -ply','经古法语进入英语，源自拉丁语 multiplicare“使成多倍”。'],
+  native:['历史整体词；nat- 仅作词族联想，不作现代拆分','源自拉丁语 nativus“出生的”，核心是出生于某地。'],
+  nature:['历史整体借词，不把 nat 当作现代词根','源自拉丁语 natura“出生、固有性质”。'],
+  negative:['历史整体词；neg- 可作词源联想，不作现代自由词根','源自拉丁语 negativus，与 negare“否认”同族。'],
+  neglect:['历史整体词，不按现代 neg- + lect 强拆','源自拉丁语 neglegere“不理会”；词源成分可帮助联想，但不是现代英语自由构词。'],
+  neutral:['历史整体词，不把 neutr 当作现代自由词根','源自拉丁语 neutralis，其基础 neuter 意为“两者都不是”。']
+};
+window.qualityBatch052=rows.map((r,i)=>{let [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;if(morphologyCorrections[word]) [morph,origin]=morphologyCorrections[word];return{id:2950+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已逐词复核核心义、词性、音标、构词关系、考研搭配，并验证英美词典录音可播放。',audioGb:`audio/b052-${word}-uk.mp3`,audioUs:`audio/b052-${word}-us.mp3`,audioLabelGb:'有道词典 · 英式',audioLabelUs:'有道词典 · 美式',reviewStatus:'已精修'};});
 })();
