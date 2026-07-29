@@ -26,7 +26,7 @@ const rows = [
 ['really','adv.','真正地；确实；很','/ˈrɪəli/','real + -ly','real 的副词形式。','really important|确实重要；not really|不完全是','Trust is really important in teamwork.','信任在团队合作中确实很重要。','以 real 的方式，就是 really。'],
 ['reason','n./v.','原因；理由；理性；推理','/ˈriːzn/','整体借词，不强拆','源自拉丁语 ratio“计算、思考”。','reason for|……的原因；reason with|与……讲道理','There is no reason to doubt the results.','没有理由怀疑这些结果。','解释 why 的依据是 reason。'],
 ['reasonable','adj.','合理的；明智的；适度的','/ˈriːznəbl/','reason + -able','表示有理由支持、符合常理。','reasonable price|合理价格；reasonable assumption|合理假设','The company offered a reasonable explanation.','公司给出了合理解释。','能够用 reason 说明的就是 reasonable。'],
-['rebel','n./v.','反叛者；反抗；造反','n. /ˈrebl/；v. /rɪˈbel/','re-（反向）+ bel（战争）词源联想','源自拉丁语 rebellare“再次开战、反抗”；注意重音变化。','rebel against|反抗；rebel forces|反叛力量','Young people sometimes rebel against social expectations.','年轻人有时会反抗社会期待。','转身反抗权威，就是 rebel。'],
+['rebel','n./v.','反叛者；反抗；造反','n. /ˈrebl/；v. /rɪˈbel/','历史词源整体记忆，不按现代前后缀强拆','源自拉丁语 rebellare“再次开战、反抗”；注意重音变化。','rebel against|反抗；rebel forces|反叛力量','Young people sometimes rebel against social expectations.','年轻人有时会反抗社会期待。','转身反抗权威，就是 rebel。'],
 ['recall','v./n.','回忆；召回；收回；记忆力','/rɪˈkɔːl/','re-（回）+ call（叫）','把记忆或人叫回来。','recall an event|回忆事件；product recall|产品召回','She could not recall the exact date.','她想不起确切日期。','把记忆 call back，就是 recall。'],
 ['receipt','n.','收据；收到；接收','/rɪˈsiːt/','receive 对应的名词；p 不发音','与 receive 同源，指收到的证明或接收行为。','sales receipt|购物收据；on receipt of|一收到','Keep the receipt in case you need a refund.','保留收据，以防需要退款。','receive 商品后拿到 receipt。'],
 ['receive','v.','收到；接待；遭受','/rɪˈsiːv/','re- + ceive（取得）','源自拉丁语 recipere“接回来、取得”。','receive support|获得支持；receive a message|收到信息','The project received public support.','该项目获得了公众支持。','把传来的东西接到手中，就是 receive。'],
@@ -36,8 +36,8 @@ const rows = [
 ['recipient','n.','接受者；收件人；受益者','/rɪˈsɪpiənt/','receive 词源 + -ent（人）','表示接收某物的人。','award recipient|获奖者；email recipient|邮件收件人','Each recipient received financial support.','每位受助者都获得了经济支持。','执行 receive 一方的人是 recipient。'],
 ['recognize','v.','认出；承认；认可；意识到','/ˈrekəɡnaɪz/','re-（再次）+ cogn（知道）+ -ize','词源意为再次知道，即辨认出来。','recognize the need|认识到需要；widely recognized|广受认可','The government recognized the need for reform.','政府认识到改革的必要性。','再次 cogn 知道，就是 recognize。'],
 ['recommend','v.','推荐；建议','/ˌrekəˈmend/','re- + commend（称赞、托付）','源自拉丁语 recommendare“再次托付、赞许”。','recommend doing|建议做；highly recommend|强烈推荐','Experts recommend reducing salt intake.','专家建议减少盐的摄入。','认为值得称赞并交给别人，就是 recommend。'],
-['record','n./v.','记录；档案；纪录；录制','n. /ˈrekɔːd/；v. /rɪˈkɔːd/','re-（回）+ cord（心）词源联想','原指重新记在心中；注意词性重音。','keep a record|保存记录；record data|记录数据','Researchers recorded changes over time.','研究人员记录了随时间发生的变化。','把信息留下来以便 recall，就是 record。'],
-['recover','v.','恢复；康复；找回；追回','/rɪˈkʌvə/','re-（回）+ cover（取得）词源联想','源自拉丁语 recuperare“重新获得”。','recover from|从……恢复；recover costs|收回成本','The economy began to recover after the crisis.','危机后经济开始复苏。','重新获得原有状态，就是 recover。'],
+['record','n./v.','记录；档案；纪录；录制','n. /ˈrekɔːd/；v. /rɪˈkɔːd/','历史词源整体记忆，不按现代前后缀强拆','原指重新记在心中；注意词性重音。','keep a record|保存记录；record data|记录数据','Researchers recorded changes over time.','研究人员记录了随时间发生的变化。','把信息留下来以便 recall，就是 record。'],
+['recover','v.','恢复；康复；找回；追回','/rɪˈkʌvə/','历史词源整体记忆，不按现代前后缀强拆','源自拉丁语 recuperare“重新获得”。','recover from|从……恢复；recover costs|收回成本','The economy began to recover after the crisis.','危机后经济开始复苏。','重新获得原有状态，就是 recover。'],
 ['recreation','n.','娱乐；消遣；休闲活动','/ˌrekriˈeɪʃn/','re-create（重新创造活力）+ -ion','历史上指通过休息重新恢复精神。','recreation facilities|娱乐设施；outdoor recreation|户外休闲','The park provides space for recreation.','公园提供休闲活动空间。','休闲使精力重新 create，就是 recreation。'],
 ['recruit','v./n.','招募；招聘；新成员','/rɪˈkruːt/','整体借词，不强拆','源自法语 recruter“补充兵员”。','recruit staff|招聘员工；new recruit|新成员','The company plans to recruit more engineers.','公司计划招聘更多工程师。','为团队补充新成员就是 recruit。'],
 ['reduce','v.','减少；降低；使处于','/rɪˈdjuːs/','re-（回、向下）+ duce（引导）','词源意为引回较低状态。','reduce costs|降低成本；reduce pollution|减少污染','The policy aims to reduce energy consumption.','该政策旨在降低能源消耗。','把数量引到更低，就是 reduce。'],
@@ -51,5 +51,5 @@ const rows = [
 ['refuge','n.','避难；庇护；避难所','/ˈrefjuːdʒ/','re-（回、离开）+ fug（逃）','源自拉丁语 refugium“逃回去的地方”。','seek refuge|寻求庇护；safe refuge|安全避难所','The building provided refuge from the storm.','这座建筑为人们提供躲避风暴的场所。','逃离危险后躲入的地方是 refuge。'],
 ['refund','n./v.','退款；退还','n. /ˈriːfʌnd/；v. /rɪˈfʌnd/','re-（回）+ fund（资金）','把资金退回；注意名词与动词重音。','full refund|全额退款；refund a payment|退还款项','Customers can request a full refund.','顾客可以申请全额退款。','把 fund 钱退回去，就是 refund。']
 ];
-window.qualityBatch059=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3300+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch059=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3300+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();

@@ -51,5 +51,5 @@ const rows = [
 ['outstanding','adj.','杰出的；显著的；未解决的；未偿付的','/aʊtˈstændɪŋ/','out + standing','突出站在外面是杰出；留在外面是未完成。','outstanding achievement|杰出成就；outstanding issue|未决问题','She received an award for outstanding research.','她因杰出研究获得奖励。','突出站在外面是杰出，留下则是未解决。'],
 ['overall','adj./adv./n.','总体的；全面地；总的情况','/ˌəʊvərˈɔːl/','over + all','覆盖全部部分，表示总体评价。','overall effect|总体影响；overall performance|总体表现','The policy had a positive overall effect.','该政策产生了积极的总体影响。','看 over all 全部部分，得到 overall 结论。']
 ];
-window.qualityBatch053=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3000+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch053=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3000+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();

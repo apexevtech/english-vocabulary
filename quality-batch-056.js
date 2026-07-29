@@ -40,7 +40,7 @@ const rows = [
 ['practice','n./v.','实践；惯例；练习；执业','/ˈpræktɪs/','整体借词，不强拆','源自希腊语 praktikos“行动的”；英式动词常拼 practise。','in practice|实际上；practice a skill|练习技能','The policy works well in theory but not in practice.','这项政策理论上可行，实践中却不行。','把理论用于行动就是 practice。'],
 ['pray','v.','祈祷；祈求','/preɪ/','整体借词，不强拆','源自拉丁语 precari“请求、祈求”。','pray for|为……祈祷；pray that|祈求','They prayed for peace and safety.','他们祈求和平与安全。','怀着希望郑重请求，就是 pray。'],
 ['prayer','n.','祈祷；祷告；祈祷者','/preə/','pray + -er（行为、文本）','由 pray 派生，此处 -er 表示祈祷行为或祷文。','say a prayer|祈祷；answer a prayer|实现祈愿','The family gathered for evening prayer.','这家人聚在一起做晚祷。','pray 时说出的内容或行为是 prayer。'],
-['precise','adj.','精确的；明确的；严谨的','/prɪˈsaɪs/','pre- + cise（切）为词源联想','源自拉丁语 praecidere“切掉”，引申为界限切得准确。','precise meaning|确切含义；precise measurement|精确测量','The report does not provide precise figures.','报告没有提供精确数字。','边界切得清楚准确，就是 precise。'],
+['precise','adj.','精确的；明确的；严谨的','/prɪˈsaɪs/','历史词源整体记忆，不按现代前后缀强拆','源自拉丁语 praecidere“切掉”，引申为界限切得准确。','precise meaning|确切含义；precise measurement|精确测量','The report does not provide precise figures.','报告没有提供精确数字。','边界切得清楚准确，就是 precise。'],
 ['predict','v.','预测；预言','/prɪˈdɪkt/','pre-（在前）+ dict（说）','字面是在事情发生前说出。','predict the future|预测未来；difficult to predict|难以预测','The model predicts a rise in demand.','该模型预测需求将上升。','在前 pre 说 dict，就是 predict。'],
 ['prefer','v.','更喜欢；宁愿','/prɪˈfɜː/','pre-（在前）+ fer（带）','词源意为把某物带到前面，表示优先选择。','prefer A to B|比起 B 更喜欢 A；prefer to|宁愿','Many consumers prefer quality to low prices.','许多消费者更看重质量而非低价。','把一个选择放在前面，就是 prefer。'],
 ['preference','n.','偏爱；优先选择；偏好','/ˈprefrəns/','prefer + -ence','prefer 的名词形式。','preference for|对……的偏爱；consumer preference|消费者偏好','Consumer preferences change over time.','消费者偏好会随时间变化。','你 prefer 的选择反映你的 preference。'],
@@ -51,5 +51,5 @@ const rows = [
 ['prepare','v.','准备；预备；使做好准备','/prɪˈpeə/','pre-（事先）+ pare（安排、备好）','源自拉丁语 praeparare“事先备好”。','prepare for|为……准备；prepare a report|准备报告','Students should prepare for rapid changes in the workplace.','学生应为职场的快速变化做好准备。','事先 pre 把事情备好，就是 prepare。'],
 ['presence','n.','存在；出席；在场；仪态','/ˈprezns/','present（在场的）+ -ence','present 的名词形式，表示在某处存在或出席。','presence of|……的存在；in the presence of|当着……的面','The presence of trees improves the urban environment.','树木的存在改善了城市环境。','present 在场的状态就是 presence。']
 ];
-window.qualityBatch056=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3150+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch056=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3150+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();

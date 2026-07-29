@@ -51,5 +51,5 @@ const rows = [
 ['plug','n./v.','插头；塞子；堵塞；插入；宣传','/plʌɡ/','基础词，不强拆','可能源自表示塞住的词，核心是填入开口。','plug in|插上电源；plug a gap|填补空缺','Plug the device into a power source.','把设备插入电源。','把 plug 塞入接口，就是 plug in。'],
 ['plus','prep./adj./n.','加；外加；正的；优点','/plʌs/','整体借词，不强拆','直接来自拉丁语 plus“更多”。','plus sign|加号；a major plus|主要优点','Experience is a major plus when applying for the job.','申请该职位时，经验是一大优势。','plus 表示再加更多，也表示一个优点。']
 ];
-window.qualityBatch055=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3100+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch055=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3100+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();

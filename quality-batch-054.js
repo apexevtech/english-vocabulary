@@ -51,5 +51,5 @@ const rows = [
 ['perfect','adj./v.','完美的；完全的；使完善','adj. /ˈpɜːfɪkt/；v. /pəˈfekt/','per-（完全）+ fect（做）','词源意为完全做成；注意动词重音在后。','perfect condition|完好状态；far from perfect|远非完美','No research method is perfect.','没有任何研究方法是完美的。','完全做成 per-fect，就是 perfect。'],
 ['perform','v.','执行；履行；表演；表现','/pəˈfɔːm/','per-（完全）+ form（形成、完成）','经法语进入英语，核心是完成某项行动。','perform a task|执行任务；perform well|表现良好','The new system performed well during the test.','新系统在测试中表现良好。','把任务完整做出来，就是 perform。']
 ];
-window.qualityBatch054=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3050+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch054=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3050+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();

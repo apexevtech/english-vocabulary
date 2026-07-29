@@ -1,6 +1,6 @@
 (() => {
 const rows = [
-['refuse','v./n.','拒绝；不接受；废料','v. /rɪˈfjuːz/；n. /ˈrefjuːs/','re-（回）+ fuse（倾倒）词源联想','源自拉丁语 refundere“倒回”，注意动词与名词读音。','refuse to|拒绝做；household refuse|生活垃圾','The company refused to release the data.','公司拒绝发布数据。','把请求推回去，就是 refuse。'],
+['refuse','v./n.','拒绝；不接受；废料','v. /rɪˈfjuːz/；n. /ˈrefjuːs/','历史词源整体记忆，不按现代 re- + fuse 拆分','源自拉丁语 refundere“倒回”，注意动词与名词读音。','refuse to|拒绝做；household refuse|生活垃圾','The company refused to release the data.','公司拒绝发布数据。','把请求推回去，就是 refuse。'],
 ['regard','v./n.','认为；看待；关注；尊重','/rɪˈɡɑːd/','整体借词，不强拆','经法语进入英语，原指注视、留意。','regard as|把……视为；with regard to|关于','Education is widely regarded as a public good.','教育被广泛视为公共利益。','如何看待某事，就是 regard it as。'],
 ['regardless','adv.','不顾；无论如何','/rɪˈɡɑːdləs/','regard + -less（不顾及）','字面是不加考虑、不顾及。','regardless of|不管；carry on regardless|不顾一切继续','The rule applies regardless of age.','这项规则不分年龄均适用。','没有 regard 条件，就是 regardless of。'],
 ['region','n.','地区；区域；身体部位','/ˈriːdʒən/','整体借词，不强拆','源自拉丁语 regio“方向、辖区”。','rural region|农村地区；in the region of|大约','The policy was tested in several regions.','这项政策在多个地区进行了试验。','有共同地理特征的一片区域是 region。'],
@@ -36,11 +36,11 @@ const rows = [
 ['render','v.','使成为；提供；呈现；翻译','/ˈrendə/','整体借词，不强拆','源自拉丁语 reddere“交还、给予”。','render assistance|提供帮助；render useless|使无用','The damage rendered the building unsafe.','损坏使这栋建筑变得不安全。','把某物变成某状态，用 render。'],
 ['renew','v.','更新；续期；重新开始','/rɪˈnjuː/','re-（重新）+ new（新的）','使某物重新变新或继续有效。','renew a contract|续签合同；renew interest|重新激发兴趣','The company renewed its commitment to safety.','公司重申了对安全的承诺。','重新变 new，就是 renew。'],
 ['rent','n./v.','租金；租用；出租','/rent/','整体借词，不强拆','源自拉丁语 reddere“交还、支付”，后指租金。','pay rent|付租金；rent a house|租房','Many young people struggle to pay rent.','许多年轻人难以支付房租。','为暂时使用房屋支付 rent。'],
-['repair','v./n.','修理；修复；补救','/rɪˈpeə/','re-（重新）+ pair（准备）词源联想','源自拉丁语 reparare“重新准备、恢复”。','repair damage|修复损坏；in need of repair|需要修理','The bridge is currently under repair.','这座桥目前正在维修。','使损坏之物恢复状态，就是 repair。'],
-['repeat','v./n.','重复；重说；重演','/rɪˈpiːt/','re-（再次）+ peat（寻求）词源联想','源自拉丁语 repetere“再次追求、再次做”。','repeat a mistake|重犯错误；repeat after|跟读','The experiment was repeated three times.','实验重复了三次。','再次做同一件事，就是 repeat。'],
+['repair','v./n.','修理；修复；补救','/rɪˈpeə/','历史词源整体记忆，不按现代 re- + pair 拆分','源自拉丁语 reparare“重新准备、恢复”。','repair damage|修复损坏；in need of repair|需要修理','The bridge is currently under repair.','这座桥目前正在维修。','使损坏之物恢复状态，就是 repair。'],
+['repeat','v./n.','重复；重说；重演','/rɪˈpiːt/','历史词源整体记忆，不按现代 re- + peat 拆分','源自拉丁语 repetere“再次追求、再次做”。','repeat a mistake|重犯错误；repeat after|跟读','The experiment was repeated three times.','实验重复了三次。','再次做同一件事，就是 repeat。'],
 ['repeatedly','adv.','反复地；一再地','/rɪˈpiːtɪdli/','repeated + -ly','由 repeat 派生，表示多次发生。','repeatedly warn|一再警告；repeatedly fail|反复失败','Experts have repeatedly warned of the risk.','专家一再警告这一风险。','repeat many times，就是 repeatedly。'],
 ['replace','v.','替换；代替；放回','/rɪˈpleɪs/','re-（重新）+ place（放置）','把新事物放到旧事物的位置。','replace A with B|用 B 替换 A；replace equipment|更换设备','Machines cannot completely replace human judgment.','机器无法完全取代人的判断。','重新 place 一个新对象，就是 replace。'],
-['reply','v./n.','回答；答复','/rɪˈplaɪ/','re-（回）+ ply（折、回应）词源联想','源自拉丁语 replicare“折回”，后表示回应。','reply to|回复；in reply to|作为对……的答复','She did not reply to the email.','她没有回复这封邮件。','把话回过去，就是 reply。'],
+['reply','v./n.','回答；答复','/rɪˈplaɪ/','历史词源整体记忆，不按现代 re- + ply 拆分','源自拉丁语 replicare“折回”，后表示回应。','reply to|回复；in reply to|作为对……的答复','She did not reply to the email.','她没有回复这封邮件。','把话回过去，就是 reply。'],
 ['report','n./v.','报告；报道；举报；汇报','/rɪˈpɔːt/','re-（回）+ port（带）','词源意为把消息带回来。','research report|研究报告；report on|报道','The report highlights several important trends.','报告突出了几个重要趋势。','把信息带回并说明，就是 report。'],
 ['represent','v.','代表；象征；描述','/ˌreprɪˈzent/','re-（再次）+ present（呈现）','使某人或某事再次呈现在他人面前。','represent interests|代表利益；represent a group|代表群体','These figures represent a significant increase.','这些数字表明增长显著。','替别人 present 观点，就是 represent。'],
 ['representative','n./adj.','代表；典型的；有代表性的','/ˌreprɪˈzentətɪv/','represent + -ative','表示执行代表行为的人或能够代表整体的样本。','sales representative|销售代表；representative sample|代表性样本','The survey used a representative sample.','调查采用了有代表性的样本。','能够 represent 整体的是 representative。'],
@@ -48,8 +48,8 @@ const rows = [
 ['republic','n.','共和国；共和政体','/rɪˈpʌblɪk/','res（事务）+ publica（公共的）','拉丁语 res publica“公共事务”。','democratic republic|民主共和国；republic government|共和政府','The country became a republic in the twentieth century.','该国在二十世纪成为共和国。','公共事务由公民共同管理的政体是 republic。'],
 ['reputation','n.','名声；声誉','/ˌrepjuˈteɪʃn/','repute（认为、评价）+ -ation','表示公众长期形成的评价。','good reputation|良好声誉；reputation for|以……闻名','The company has a reputation for quality.','这家公司以质量著称。','众人反复评价形成 reputation。'],
 ['request','n./v.','请求；要求；索取','/rɪˈkwest/','re- + quest（寻求）','源自拉丁语 requirere“寻求、询问”。','make a request|提出请求；request information|索取信息','Customers may request further information.','顾客可以索取更多信息。','正式地 quest 所需之物，就是 request。'],
-['require','v.','需要；要求；规定','/rɪˈkwaɪə/','re- + quire（寻求）词源联想','源自拉丁语 requirere“寻求、需要”。','require somebody to|要求某人；require attention|需要关注','The job requires strong communication skills.','这份工作要求很强的沟通能力。','完成事情不可缺少的，就是 require。'],
+['require','v.','需要；要求；规定','/rɪˈkwaɪə/','历史词源整体记忆，不按现代 re- + quire 拆分','源自拉丁语 requirere“寻求、需要”。','require somebody to|要求某人；require attention|需要关注','The job requires strong communication skills.','这份工作要求很强的沟通能力。','完成事情不可缺少的，就是 require。'],
 ['requirement','n.','要求；必要条件；所需之物','/rɪˈkwaɪəmənt/','require + -ment','require 的名词形式。','meet a requirement|满足要求；legal requirement|法律要求','Applicants must meet all requirements.','申请人必须满足所有要求。','必须 require 的条件是 requirement。']
 ];
-window.qualityBatch060=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3350+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch060=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3350+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();

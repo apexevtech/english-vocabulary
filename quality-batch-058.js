@@ -51,5 +51,5 @@ const rows = [
 ['radio','n./v.','收音机；无线电；用无线电通信','/ˈreɪdiəʊ/','radi（射线、辐射）+ -o','与 radius、radiation 同源，信息通过无线电波传播。','radio station|广播电台；radio signal|无线电信号','The news was broadcast on national radio.','这条新闻通过国家广播电台播出。','利用辐射波传送声音的是 radio。'],
 ['rage','n./v.','盛怒；狂暴；激烈进行','/reɪdʒ/','整体借词，不强拆','源自拉丁语 rabies“狂怒”。','in a rage|盛怒；rage against|愤怒反对','The debate continued to rage for months.','这场争论激烈持续了数月。','像风暴一样猛烈的愤怒是 rage。']
 ];
-window.qualityBatch058=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3250+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch058=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3250+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();

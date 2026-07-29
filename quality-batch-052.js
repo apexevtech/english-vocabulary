@@ -51,5 +51,5 @@ const rows = [
 ['nevertheless','adv.','然而；尽管如此','/ˌnevəðəˈles/','never + the + less（并不少）','历史组合词，表示即便如此，后面的事实仍不减少。','but nevertheless|但仍然；nevertheless, ...|然而……','The task was difficult; nevertheless, the team completed it.','任务很困难；然而，团队还是完成了。','困难没有让决心变 less，因此 nevertheless。'],
 ['noble','adj./n.','高尚的；贵族的；宏伟的；贵族','/ˈnəʊbl/','整体借词，不强拆','源自拉丁语 nobilis“知名、出身高贵的”，后发展出品格高尚义。','noble cause|崇高事业；noble ambition|高尚抱负','They devoted their lives to a noble cause.','他们毕生致力于一项崇高事业。','值得尊敬的品格和目标是 noble。']
 ];
-window.qualityBatch052=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:2950+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch052=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:2950+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();

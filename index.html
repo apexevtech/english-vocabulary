@@ -544,7 +544,7 @@
       const q=filter.trim().toLowerCase();
       const visible=words.filter(w=>{
         const masteryMatches=masteryFilter==='all'||(masteryFilter==='learned'?learned.has(w.id):!learned.has(w.id));
-        const qualityMatches=qualityFilter==='all'||(qualityFilter==='refined'?(w.reviewStatus||'已精修')==='已精修':w.reviewStatus==='待人工精修');
+        const qualityMatches=qualityFilter==='all'||(qualityFilter==='refined'?(w.reviewStatus||'已精修')==='已精修':(w.reviewStatus||'已精修')!=='已精修');
         return masteryMatches&&qualityMatches&&(w.word.includes(q)||w.meaning.includes(filter));
       });
       const groupedNames=new Set(prefixGroups.flatMap(group=>group.words));
@@ -565,7 +565,7 @@
       picker.innerHTML=visible.map(w=>`<option value="${w.id}">${String(w.displayNo).padStart(3,'0')} · ${w.word}</option>`).join('');
       picker.value=visible.some(w=>w.id===words[current].id)?String(words[current].id):'';
       document.querySelectorAll('.word-group').forEach(d=>d.ontoggle=()=>{d.open?collapsedGroups.delete(d.dataset.group):collapsedGroups.add(d.dataset.group);});
-      document.querySelectorAll('.word-item').forEach(b=>b.onclick=()=>{current=words.findIndex(w=>w.id===+b.dataset.id);render();playAudio(words[current].audioGb||words[current].audioUs);scrollToCurrentCard();});
+      document.querySelectorAll('.word-item').forEach(b=>b.onclick=()=>{current=words.findIndex(w=>w.id===+b.dataset.id);render();playWordAudio('uk');scrollToCurrentCard();});
       el('total').textContent=`${words.length} 个单词`;
       el('progress').textContent=`已掌握 ${learned.size}`;
       el('showAllMastery').classList.toggle('active',masteryFilter==='all');
@@ -584,9 +584,10 @@
       el('recordingGb').textContent=w.audioLabelGb||(w.audioGb?'词典 · 英式':'在线词典 · 英式'); el('recordingGb').style.display=w.word?'':'none';
       el('recordingUs').textContent=w.audioLabelUs||(w.audioUs?'词典 · 美式':'在线词典 · 美式'); el('recordingUs').style.display=w.word?'':'none';
       el('prev').disabled=current===0; el('next').disabled=current===words.length-1;
+      if(!w.phonetic) void hydrateDictionaryPhonetic(w);
     }
     el('search').oninput=e=>renderList(e.target.value);
-    el('mobileWordPicker').onchange=e=>{current=words.findIndex(w=>w.id===+e.target.value);render();playAudio(words[current].audioGb||words[current].audioUs);scrollToCurrentCard();};
+    el('mobileWordPicker').onchange=e=>{current=words.findIndex(w=>w.id===+e.target.value);render();playWordAudio('uk');scrollToCurrentCard();};
     el('showAllMastery').onclick=()=>{masteryFilter='all';renderList(el('search').value);};
     el('showUnlearned').onclick=()=>{masteryFilter='unlearned';renderList(el('search').value);};
     el('showLearned').onclick=()=>{masteryFilter='learned';renderList(el('search').value);};
@@ -596,13 +597,56 @@
     el('toggleCn').onclick=()=>{el('card').classList.toggle('hidden-cn');el('toggleCn').textContent=el('card').classList.contains('hidden-cn')?'显示中文':'隐藏中文';};
     el('mastered').onclick=()=>{const id=words[current].id;learned.has(id)?learned.delete(id):learned.add(id);localStorage.setItem('vocab-learned',JSON.stringify([...learned]));render();};
     el('prev').onclick=()=>{if(current>0){current--;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}}; el('next').onclick=()=>{if(current<words.length-1){current++;render();if(!window.matchMedia('(max-width:720px)').matches)scrollToCurrentCard();}};
-    async function playAudio(src){
+    const dictionaryLookupCache=new Map();
+    function primaryDictionaryPos(pos=''){
+      if(/^v\b|^v\./i.test(pos))return 'verb';
+      if(/^n\b|^n\./i.test(pos))return 'noun';
+      if(/^adj\b|^adj\./i.test(pos))return 'adjective';
+      if(/^adv\b|^adv\./i.test(pos))return 'adverb';
+      return '';
+    }
+    async function lookupDictionary(word){
+      if(!dictionaryLookupCache.has(word))dictionaryLookupCache.set(word,fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`).then(r=>{if(!r.ok)throw new Error('dictionary lookup failed');return r.json();}));
+      return dictionaryLookupCache.get(word);
+    }
+    function pickDictionaryPronunciation(entries,accent,pos){
+      const matching=entries.filter(entry=>!pos||(entry.meanings||[]).some(m=>m.partOfSpeech===pos));
+      const pool=(matching.length?matching:entries).flatMap(entry=>(entry.phonetics||[]).map(p=>({...p,entry})));
+      const accented=pool.filter(p=>p.audio&&p.audio.toLowerCase().includes(`-${accent}.mp3`));
+      return accented[0]||pool.find(p=>p.audio)||pool.find(p=>p.text)||null;
+    }
+    async function hydrateDictionaryPhonetic(word){
+      try{
+        const entries=await lookupDictionary(word.word);
+        const pos=primaryDictionaryPos(word.pos);
+        const uk=pickDictionaryPronunciation(entries,'uk',pos);
+        const us=pickDictionaryPronunciation(entries,'us',pos);
+        const ukText=uk?.text||entries.find(e=>e.phonetic)?.phonetic||'';
+        const usText=us?.text||ukText;
+        if(!word.phonetic&&(ukText||usText))word.phonetic=`英 ${ukText||usText} · 美 ${usText||ukText}`;
+        if(words[current]===word)el('phonetic').textContent=word.phonetic||'音标暂未查到';
+      }catch(error){if(words[current]===word&&!word.phonetic)el('phonetic').textContent='音标暂未查到';}
+    }
+    async function playWordAudio(accent='uk'){
+      const word=words[current];
+      const local=accent==='uk'?word.audioGb:word.audioUs;
+      if(local)return playAudio(local,accent);
+      try{
+        const entries=await lookupDictionary(word.word);
+        const pronunciation=pickDictionaryPronunciation(entries,accent,primaryDictionaryPos(word.pos));
+        if(pronunciation?.text&&!word.phonetic)await hydrateDictionaryPhonetic(word);
+        if(pronunciation?.audio){
+          el(accent==='uk'?'recordingGb':'recordingUs').textContent=`在线词典实录 · ${accent==='uk'?'英式':'美式'}`;
+          return playAudio(pronunciation.audio,accent);
+        }
+      }catch(error){ /* Continue to established dictionary fallbacks. */ }
+      return playAudio('',accent);
+    }
+    async function playAudio(src,accent='us'){
       const a=el('audio'); a.pause();
-      const sources=src?[src]:[
-        `https://ssl.gstatic.com/dictionary/static/sounds/20200429/${encodeURIComponent(words[current].word)}--_us_1.mp3`,
-        `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(words[current].word)}&type=2`,
-        `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(words[current].word)}&type=1`
-      ];
+      const word=encodeURIComponent(words[current].word);
+      const fallbacks=accent==='uk'?[`https://dict.youdao.com/dictvoice?audio=${word}&type=1`,`https://dict.youdao.com/dictvoice?audio=${word}&type=2`]:[`https://ssl.gstatic.com/dictionary/static/sounds/20200429/${word}--_us_1.mp3`,`https://dict.youdao.com/dictvoice?audio=${word}&type=2`,`https://dict.youdao.com/dictvoice?audio=${word}&type=1`];
+      const sources=src?[src]:fallbacks;
       for(const source of sources){
         try{
           a.src=source; a.currentTime=0;
@@ -612,10 +656,10 @@
       }
       alert('该词暂时没有可用音频，请检查网络连接后重试。');
     }
-    el('recordingGb').onclick=()=>playAudio(words[current].audioGb);
-    el('recordingUs').onclick=()=>playAudio(words[current].audioUs);
-    el('word').onclick=()=>playAudio(words[current].audioGb||words[current].audioUs);
-    el('word').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();playAudio(words[current].audioGb||words[current].audioUs);}};
+    el('recordingGb').onclick=()=>playWordAudio('uk');
+    el('recordingUs').onclick=()=>playWordAudio('us');
+    el('word').onclick=()=>playWordAudio('uk');
+    el('word').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();playWordAudio('uk');}};
     el('listenExample').onclick=()=>playAudio(words[current].audioExample);
     el('listenStory').onclick=()=>playAudio(words[current].audioStory);
     render();

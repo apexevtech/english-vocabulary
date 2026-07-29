@@ -1,6 +1,6 @@
 (() => {
 const rows = [
-['present','adj./n./v.','当前的；在场的；礼物；呈现；提出','/ˈpreznt/；v. /prɪˈzent/','pre-（在前）+ sent（存在）词源联想','源自拉丁语 praesens“在眼前”，注意动词重音后移。','at present|目前；present evidence|呈现证据','The report presents evidence from several countries.','报告呈现了多个国家的证据。','在眼前的是 present，拿到眼前是 present。'],
+['present','adj./n./v.','当前的；在场的；礼物；呈现；提出','/ˈpreznt/；v. /prɪˈzent/','历史词源整体记忆，不按现代前后缀强拆','源自拉丁语 praesens“在眼前”，注意动词重音后移。','at present|目前；present evidence|呈现证据','The report presents evidence from several countries.','报告呈现了多个国家的证据。','在眼前的是 present，拿到眼前是 present。'],
 ['preserve','v./n.','保护；保存；维护；保护区','/prɪˈzɜːv/','pre-（在前）+ serv（保持）','拉丁语 praeservare“事先守护”。','preserve culture|保护文化；well-preserved|保存完好的','Digital records help preserve historical documents.','数字记录有助于保存历史文献。','提前守护，使其保持原样，就是 preserve。'],
 ['president','n.','总统；主席；校长；总裁','/ˈprezɪdənt/','preside（主持）+ -ent','原指坐在前面主持的人。','company president|公司总裁；elect a president|选举总统','The president announced a new policy.','总统宣布了一项新政策。','主持 preside 一个组织的人是 president。'],
 ['press','n./v.','新闻界；出版社；按压；催促','/pres/','基础借词，不强拆','拉丁语 pressare“压”，印刷机靠压印，后引申为新闻界。','press conference|新闻发布会；press a button|按按钮','The issue received wide attention in the press.','该问题受到新闻界广泛关注。','press 印刷新闻，也表示按压。'],
@@ -28,7 +28,7 @@ const rows = [
 ['prize','n./adj./v.','奖品；珍视；获奖的','/praɪz/','整体借词，不强拆','与 price 有共同词源，后来专指赢得的奖励。','win a prize|获奖；prize highly|十分珍视','She won a prize for her research.','她的研究赢得了奖项。','优秀表现赢得的是 prize。'],
 ['probability','n.','可能性；概率','/ˌprɒbəˈbɪləti/','probable + -ity','probable 的名词形式，数学中指概率。','high probability|高概率；probability of|……的概率','There is a high probability of further growth.','进一步增长的可能性很高。','probable 的程度就是 probability。'],
 ['probable','adj.','很可能的；大概的','/ˈprɒbəbl/','prob（检验、证明）+ -able','词源含“可被证实、可信”之意。','probable cause|可能原因；highly probable|很可能','The most probable explanation is human error.','最可能的解释是人为错误。','证据支持、很可能发生的是 probable。'],
-['problem','n.','问题；难题','/ˈprɒbləm/','pro-（向前）+ blem（抛）词源联想','希腊语 problema“抛到面前的事”。','solve a problem|解决问题；social problem|社会问题','The study proposes a solution to the problem.','研究提出了解决该问题的方案。','被抛到面前等待解决的是 problem。'],
+['problem','n.','问题；难题','/ˈprɒbləm/','历史词源整体记忆，不按现代前后缀强拆','希腊语 problema“抛到面前的事”。','solve a problem|解决问题；social problem|社会问题','The study proposes a solution to the problem.','研究提出了解决该问题的方案。','被抛到面前等待解决的是 problem。'],
 ['procedure','n.','程序；步骤；手续；手术','/prəˈsiːdʒə/','proceed + -ure','与 proceed 同源，表示向前进行的一套步骤。','standard procedure|标准程序；legal procedure|法律程序','The procedure must be followed carefully.','必须认真遵循这一程序。','按步骤 proceed 的方法是 procedure。'],
 ['proceed','v.','继续进行；前往；着手','/prəˈsiːd/','pro-（向前）+ ceed（走）','字面是向前走。','proceed with|继续；proceed to|接着做','The committee decided to proceed with the plan.','委员会决定继续执行该计划。','向前走 ceed，就是 proceed。'],
 ['process','n./v.','过程；流程；处理；加工','/ˈprəʊses/；v. /prəˈses/','pro-（向前）+ cess（走）','词源指向前推进，后指连续步骤。','decision-making process|决策过程；process data|处理数据','The application process takes several weeks.','申请流程需要数周。','一步步向前推进的是 process。'],
@@ -38,18 +38,18 @@ const rows = [
 ['profession','n.','职业；专业；行业','/prəˈfeʃn/','pro-（公开）+ fess（宣称）','原指公开宣誓从事某种职业。','medical profession|医学界；enter a profession|进入某行业','Teaching is a demanding profession.','教师是一项要求很高的职业。','需要专业训练的职业是 profession。'],
 ['professional','adj./n.','专业的；职业的；专业人士','/prəˈfeʃənl/','profession + -al','表示与某一 profession 有关。','professional skills|专业技能；health professional|医疗专业人员','Professional training improves service quality.','专业培训能提升服务质量。','在 profession 中受过训练的人是 professional。'],
 ['professor','n.','教授','/prəˈfesə/','profess（公开宣称、教授）+ -or','原指公开讲授某学科的人。','university professor|大学教授；associate professor|副教授','The professor encouraged students to question assumptions.','教授鼓励学生质疑假设。','在大学中教授专业知识的人是 professor。'],
-['profile','n./v.','概况；侧面轮廓；形象；介绍','/ˈprəʊfaɪl/','pro-（向前）+ file（线）词源联想','原指侧面轮廓，后指概括人物或事物特征。','high profile|高调；company profile|公司简介','The report profiles several successful firms.','报告介绍了几家成功企业。','勾勒关键轮廓就是 profile。'],
-['profit','n./v.','利润；益处；获利；受益','/ˈprɒfɪt/','pro-（向前）+ fit（做）词源联想','拉丁语 proficere“取得进展、获益”。','make a profit|获利；profit from|从……受益','The company made a small profit last year.','公司去年获得了少量利润。','经营后得到的收益是 profit。'],
-['profound','adj.','深刻的；深远的；渊博的','/prəˈfaʊnd/','pro- + found（深处）词源联想','源自拉丁语 profundus“深的”。','profound effect|深远影响；profound change|深刻变化','Technology has had a profound effect on communication.','技术对交流产生了深远影响。','像深水一样深入的是 profound。'],
+['profile','n./v.','概况；侧面轮廓；形象；介绍','/ˈprəʊfaɪl/','历史词源整体记忆，不按现代前后缀强拆','原指侧面轮廓，后指概括人物或事物特征。','high profile|高调；company profile|公司简介','The report profiles several successful firms.','报告介绍了几家成功企业。','勾勒关键轮廓就是 profile。'],
+['profit','n./v.','利润；益处；获利；受益','/ˈprɒfɪt/','历史词源整体记忆，不按现代前后缀强拆','拉丁语 proficere“取得进展、获益”。','make a profit|获利；profit from|从……受益','The company made a small profit last year.','公司去年获得了少量利润。','经营后得到的收益是 profit。'],
+['profound','adj.','深刻的；深远的；渊博的','/prəˈfaʊnd/','历史词源整体记忆，不按现代前后缀强拆','源自拉丁语 profundus“深的”。','profound effect|深远影响；profound change|深刻变化','Technology has had a profound effect on communication.','技术对交流产生了深远影响。','像深水一样深入的是 profound。'],
 ['program','n./v.','计划；节目；程序；编程','/ˈprəʊɡræm/','pro-（在前）+ gram（写）','希腊语 programma“预先写下的公告”。','training program|培训计划；computer program|计算机程序','The program provides support for small businesses.','该计划为小企业提供支持。','预先写好的行动安排或代码是 program。'],
 ['progress','n./v.','进步；进展；前进','n. /ˈprəʊɡres/；v. /prəˈɡres/','pro-（向前）+ gress（走）','字面是向前走；注意名词与动词重音。','make progress|取得进展；rapid progress|快速进步','The project has made significant progress.','项目取得了显著进展。','向前 gress 就有 progress。'],
 ['prohibit','v.','禁止；阻止','/prəˈhɪbɪt/','pro-（在前）+ hibit（持有）','拉丁语 prohibere“挡在前面、制止”。','prohibit somebody from|禁止某人；strictly prohibited|严禁','The law prohibits smoking in public buildings.','法律禁止在公共建筑内吸烟。','挡在前面不让通过，就是 prohibit。'],
 ['project','n./v.','项目；工程；预测；投射','n. /ˈprɒdʒekt/；v. /prəˈdʒekt/','pro-（向前）+ ject（投）','字面是向前投；名词与动词重音不同。','research project|研究项目；project growth|预测增长','The project aims to reduce urban pollution.','该项目旨在减少城市污染。','向前投出的计划是 project。'],
 ['prominent','adj.','突出的；重要的；著名的','/ˈprɒmɪnənt/','pro-（向前）+ min（突出）+ -ent','拉丁语 prominere“向前突出”。','prominent role|重要作用；prominent figure|著名人物','She played a prominent role in the reform.','她在改革中发挥了重要作用。','向前突出、显眼的就是 prominent。'],
-['promise','n./v.','承诺；希望；答应；预示','/ˈprɒmɪs/','pro-（向前）+ mise（送）词源联想','拉丁语 promittere“向前送出承诺”。','make a promise|作出承诺；show promise|显示潜力','The new treatment shows considerable promise.','这种新疗法显示出很大潜力。','把保证送到未来，就是 promise。'],
+['promise','n./v.','承诺；希望；答应；预示','/ˈprɒmɪs/','历史词源整体记忆，不按现代前后缀强拆','拉丁语 promittere“向前送出承诺”。','make a promise|作出承诺；show promise|显示潜力','The new treatment shows considerable promise.','这种新疗法显示出很大潜力。','把保证送到未来，就是 promise。'],
 ['promote','v.','促进；提升；推广','/prəˈməʊt/','pro-（向前）+ mot（移动）','字面是向前推动。','promote growth|促进增长；promote a product|推广产品','Education promotes social mobility.','教育促进社会流动。','向前 mot 推动，就是 promote。'],
 ['prompt','adj./v./n.','迅速的；促使；提示','/prɒmpt/','整体借词，不强拆','拉丁语 promptus“准备好的、迅速的”。','prompt action|迅速行动；prompt somebody to|促使某人','The findings prompted the government to act.','研究结果促使政府采取行动。','及时出现的提示 prompt 能促使行动。'],
 ['proof','n./adj.','证据；证明；校样；防……的','/pruːf/','prove 对应的名词','与 prove 同源，指能证明事实的证据。','proof of|……的证据；scientific proof|科学证明','There is no proof that the policy caused the decline.','没有证据表明该政策导致了下降。','能 prove 结论的材料是 proof。']
 ];
-window.qualityBatch057=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3200+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch057=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3200+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();

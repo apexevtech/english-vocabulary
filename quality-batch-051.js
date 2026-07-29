@@ -51,5 +51,5 @@ const rows = [
 ['merit','n./v.','优点；价值；功绩；值得','/ˈmerɪt/','整体词，不强拆','源自拉丁语 meritum“应得之物”，核心是因价值而值得肯定。','on merit|凭实力；merit attention|值得关注','The proposal merits careful consideration.','这项提议值得认真考虑。','有 merit 的方案 merits attention。'],
 ['method','n.','方法；办法；条理','/ˈmeθəd/','整体借词，不强拆','源自希腊语 methodos“追寻的道路”，即达到目标的途径。','research method|研究方法；effective method|有效方法','The researchers used a reliable method to collect data.','研究人员采用了可靠的方法收集数据。','通往目标的一条清晰道路就是 method。']
 ];
-window.qualityBatch051=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:2900+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已核对核心义、词性、重音、构词来源和考研常用搭配。',audioGb:'',audioUs:'',reviewStatus:'已精修'};});
+window.qualityBatch051=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:2900+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
 })();
