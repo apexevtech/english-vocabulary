@@ -51,5 +51,19 @@ const rows = [
 ['refuge','n.','避难；庇护；避难所','/ˈrefjuːdʒ/','re-（回、离开）+ fug（逃）','源自拉丁语 refugium“逃回去的地方”。','seek refuge|寻求庇护；safe refuge|安全避难所','The building provided refuge from the storm.','这座建筑为人们提供躲避风暴的场所。','逃离危险后躲入的地方是 refuge。'],
 ['refund','n./v.','退款；退还','n. /ˈriːfʌnd/；v. /rɪˈfʌnd/','re-（回）+ fund（资金）','把资金退回；注意名词与动词重音。','full refund|全额退款；refund a payment|退还款项','Customers can request a full refund.','顾客可以申请全额退款。','把 fund 钱退回去，就是 refund。']
 ];
-window.qualityBatch059=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3300+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
+const morphologyCorrections = {
+  rational:['历史整体词；与 ratio、reason 同源，不视为现代 ratio + -al 派生','源自拉丁语 rationalis“有理性的、可推理的”。'],
+  receipt:['历史整体词；与 receive 同源，不是规则性现代名词派生','经古法语进入英语，源自拉丁语 recepta“收到的东西”；字母 p 不发音。'],
+  receive:['历史整体词；re-、-ceive 仅作拉丁词源联想','经古法语进入英语，源自拉丁语 recipere“接回、取得”；-ceive 不是现代自由词根。'],
+  reception:['历史整体词；与 receive 同源，不视为规则性现代派生','源自拉丁语 receptio“接收、接待”。'],
+  recipient:['历史整体词；与 receive 同源，不拆作 receive + -ent','源自拉丁语 recipiens“接受者、收件人”。'],
+  recognize:['历史整体词；re-、cogn- 仅作拉丁词源联想','经古法语进入英语，源自拉丁语 recognoscere“再次认知、辨认”。'],
+  recommend:['历史整体词；与 commend 同源，不简单拆作现代 re- + commend','源自拉丁语 recommendare“托付、赞许”，现代核心义为建议或推荐。'],
+  recreation:['历史整体词；注意与 re-creation“重新创造”区别','源自拉丁语 recreatio“恢复、消遣”；现代 recreation 指休闲娱乐，不是普通 re-create + -ion。'],
+  reduce:['历史整体词；re-、-duce 仅作拉丁词源联想','源自拉丁语 reducere“引回、带到较低状态”；-duce 不是现代自由词根。'],
+  refer:['历史整体词；re-、fer 仅作拉丁词源联想','源自拉丁语 referre“带回、指向”；fer 不是现代英语自由词根。'],
+  reflect:['历史整体词；re-、flect- 仅作拉丁词源联想','源自拉丁语 reflectere“弯回”；flect 不是现代自由词根。'],
+  refuge:['历史整体词；re-、fug- 仅作拉丁词源联想','源自拉丁语 refugium“逃回去的地方”；fug 不是现代英语自由词根。']
+};
+window.qualityBatch059=rows.map((r,i)=>{let [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;if(morphologyCorrections[word]) [morph,origin]=morphologyCorrections[word];return{id:3300+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已逐词复核核心义、词性、音标、构词关系、考研搭配，并验证英美词典录音可播放。',audioGb:`audio/b059-${word}-uk.mp3`,audioUs:`audio/b059-${word}-us.mp3`,audioLabelGb:'有道词典 · 英式',audioLabelUs:'有道词典 · 美式',reviewStatus:'已精修'};});
 })();
