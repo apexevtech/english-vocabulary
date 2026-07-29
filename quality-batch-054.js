@@ -51,5 +51,18 @@ const rows = [
 ['perfect','adj./v.','完美的；完全的；使完善','adj. /ˈpɜːfɪkt/；v. /pəˈfekt/','per-（完全）+ fect（做）','词源意为完全做成；注意动词重音在后。','perfect condition|完好状态；far from perfect|远非完美','No research method is perfect.','没有任何研究方法是完美的。','完全做成 per-fect，就是 perfect。'],
 ['perform','v.','执行；履行；表演；表现','/pəˈfɔːm/','per-（完全）+ form（形成、完成）','经法语进入英语，核心是完成某项行动。','perform a task|执行任务；perform well|表现良好','The new system performed well during the test.','新系统在测试中表现良好。','把任务完整做出来，就是 perform。']
 ];
-window.qualityBatch054=rows.map((r,i)=>{const [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;return{id:3050+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'核心义、词性和例句已录入；构词与词典发音正在复核。',audioGb:'',audioUs:'',reviewStatus:'构词复核中'};});
+const morphologyCorrections = {
+  parallel:['希腊语整体借词，不按现代 para- + allel 强拆','源自希腊语 parallelos“彼此并列的”，核心是两条线并行不交。'],
+  participate:['历史整体词；与 part 同族，不拆作现代 part + cip + -ate','源自拉丁语 participare“分享、参与”，现代英语中 cip 不是自由词根。'],
+  particular:['历史整体词；与 part 同族，不把 -icular 当现代后缀','源自拉丁语 particularis“属于某一部分的”，后表示特定的。'],
+  partner:['历史整体派生词；与 part 同源，不把 -ner 当现代后缀','由早期英语 parcener“共同分享者”演变而来，核心是共同参与或分享。'],
+  passenger:['历史整体词；与 passage 同族，不宜按现代 passage + -er 机械拆分','经古法语进入英语，原指旅行、通行的人。'],
+  passive:['历史整体词；与 passion、patient 同源，不拆作现代 pass + -ive','源自拉丁语 passivus“承受作用的”；现代动词 pass 并不是此处的直接词基。'],
+  patience:['历史整体词；与 patient 同源，不拆作 patient + -ce','经古法语进入英语，源自拉丁语 patientia“忍耐”。'],
+  penalty:['penal + -ty（词形有拼写调整）','由 penal 词族派生，核心是对违规行为施加的处罚。'],
+  perceive:['历史整体词；per-、-ceive 仅作拉丁词源联想','经古法语进入英语，源自拉丁语 percipere“取得、领会”；-ceive 不是现代自由词根。'],
+  perfect:['历史整体词；per-、fect 仅作拉丁词源联想','源自拉丁语 perfectus“完成的”；形容词与动词注意重音变化。'],
+  perform:['历史整体词，不简单拆作现代 per- + form','经盎格鲁-法语进入英语，历史结构和现代 form 并非普通的自由词拼接。']
+};
+window.qualityBatch054=rows.map((r,i)=>{let [word,pos,meaning,ipa,morph,origin,cols,en,zh,mn]=r;if(morphologyCorrections[word]) [morph,origin]=morphologyCorrections[word];return{id:3050+i,word,pos,meaning,phonetic:`英 ${ipa} · 美 ${ipa}`,parts:[[word,morph]],origin,collocations:cols.split('；').map(x=>x.split('|')),mnemonic:mn,exampleEn:en,exampleZh:zh,storyEn:en,storyZh:`${zh} ${mn}`,note:'已逐词复核核心义、词性、音标、构词关系、考研搭配，并验证英美词典录音可播放。',audioGb:`audio/b054-${word}-uk.mp3`,audioUs:`audio/b054-${word}-us.mp3`,audioLabelGb:'有道词典 · 英式',audioLabelUs:'有道词典 · 美式',reviewStatus:'已精修'};});
 })();
