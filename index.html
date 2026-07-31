@@ -254,6 +254,7 @@
   <script src="quality-batch-065.js"></script>
   <script src="quality-batch-066.js"></script>
   <script src="quality-batch-067.js"></script>
+  <script src="quality-batch-068.js"></script>
   <script src="refined-phonetics.js"></script>
   <script>
     const detailedWords = [{
@@ -450,6 +451,7 @@
     window.qualityBatch065.forEach(w=>detailedByWord.set(w.word,w));
     window.qualityBatch066.forEach(w=>detailedByWord.set(w.word,w));
     window.qualityBatch067.forEach(w=>detailedByWord.set(w.word,w));
+    window.qualityBatch068.forEach(w=>detailedByWord.set(w.word,w));
     let nextImportedId = 1000;
     const words = window.vocabularyList.map(word=>detailedByWord.get(word)||{
       id:nextImportedId++, word, phonetic:'', meaning:'释义待补充',
